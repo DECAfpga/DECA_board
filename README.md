@@ -4,9 +4,9 @@ The DECA Development Kit presents a robust hardware design platform built around
 
 The folders contain the following information:
 
-* **Tutorials**: Basic tutorials.
+* **Tutorials**: Porting cores tutorials and others
 * **Documents**: Various useful documentation (schematics, images, ...)
-* **Deca_pinout**:  Pinout of the Deca board BB connectors
+* **Deca_pinout**:  Pinout of the Deca board Beaglebone Black connectors
 * **Sdram_mister_deca**:  Hack to easily adapt a Mister SDRAM memory module to your Deca board
 * **Litex**: Deca board target for [Litex](https://github.com/enjoy-digital/litex)
 * **FuseSoC**: Tutorial on FuseSoC with Deca board
@@ -14,6 +14,7 @@ The folders contain the following information:
 ## **Useful resources:**
 
 * [DECA resources list](resources.md) 
+* [Porting cores tutorial](Tutorials/Porting-Cores)
 * Buy at Arrow https://www.arrow.com/en/products/deca/arrow-development-tools
 * Intel Community Knowledge Base -DECA https://community.intel.com/t5/FPGA-Wiki/DECA/ta-p/735458
 * Porting cores to DECA https://github.com/SoCFPGA-learning/DECA/tree/main/Tutorials/Porting-Cores
