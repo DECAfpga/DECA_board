@@ -4,17 +4,17 @@ See below for target cores and porting from them.
 
 ### Audio through Line out 3.5 jack
 
-[Using DECA's integrated TLV320AIC3254 Audio DAC](Tutorials/Porting-Cores/AudioCODEC)
+[Using DECA's integrated TLV320AIC3254 Audio DAC](AudioCODEC)
 
 ### Video & Audio through HDMI
 
-[Using DECA's HDMI TX](Tutorials/Porting-Cores/HDMI) 
+[Using DECA's HDMI TX](HDMI) 
 
 ### Video using an VGA adapter
 
 Using an VGA adapter (333) like https://www.waveshare.com/vga-ps2-board.htm
 
-See [VGA conversion from 666 to 333](VGA333/README.md)
+See [VGA conversion from 666 to 333](VGA333)
 
 ### SD card 
 
