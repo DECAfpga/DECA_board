@@ -1,0 +1,48 @@
+Resumen de Registros en el LOOP con Ear (LOOP.ear.hex) que no 
+aparecen en el de Line Out (LOOP.LineOut.v1.hex) o que cambian de valor:
+===============================================================
+
+Cambios importantes del LOOP.ear:
+	Usa el filtro PRB_P2 que hace uso del Dynamic range compression (DRC)
+
+
+------
+REGISTROS DE LA PÁGINA 0:
+
+- Registros nuevos de LOOP.ear inicializados con valores no por defecto:
+1E 84 BCLK N Divider   BCLK N divider powered up;   BCLK N divider value = 4     (default = 1)
+En principio no tiene efecto ya que el BCLK es externo, y no se genera internamente con lo que se puede dividir respecto el BDIV_CLKIN
+
+Note: DRC only active if a PRB_Px has been selected that supports DRC
+44 7D DRC Control Register 1  01: DRC Hysteresis = 1dB; 111: DRC Threshold = -24dBFS;  1: Left&Right Channel DRC enabled. 
+45 08 DRC Control Register 2  0001: DRC Hold Time = 32 DAC Word Clocks
+46 FF DRC Control Register 3  DRC Attack Rate = 1.2207e-4dB per DAC Word Clock;  DRC Decay Rate = 4.7683e-7dB per DAC Word Clock
+
+- Registros con valores diferentes:			(ear)		(line out.v1)
+
+3C Set the DAC Mode to					02 PRB_P2	01 PRB_P1	
+3F DAC Channel Volume Control's Soft-Step control 	D5 01: 2 DAC	D4 00: 1 DAC    Soft-Stepping is 1 step per X DAC Word Clocks
+
+- Registros nuevos de LOOP.ear que en princio toman los valores por defecto:
+04 00 Multiplexers   MCLK  defaults
+1C 00 Data offset setting  0 BCLKs
+41 00 Left DAC Channel Digital Volume Control Register   Digital Volume Control = 0.0dB
+42 00 Right DAC Channel Digital Volume Control Register  Digital Volume Control = 0.0dB
+
+
+
+------
+REGISTROS DE LA PÁGINA 1:
+
+
+- Registros con valores diferentes:			(ear)					(line out.v1)
+
+02 LDO Control Register				C9 pero luego vuelve a 01		01	
+09 Output Driver Power Control Register	x	0C only LOL/LOR powered up		FF  Power up all drivers
+0A Common Mode Control Register		x	40 1: Full Chip Common Mode is 0.75V	00  Input Com.Mode 0.9V and Out.Com.Mode for Headphone to In.Com.Mode
+12 Set the HPL gain dB				x	03 					12
+13 Set the HPR gain dB				x	03					12
+
+
+
+

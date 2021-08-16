@@ -1,0 +1,65 @@
+Based on TLV320AIC3254 Application Reference Guide Example setup  4.0.1 Stereo DAC Playback with 48ksps Sample Rate and High Performance.
+and modified to output to Line out (LOL/R) instead of headphone output (HPL/R).
+
+See Register description in TLV320AIC3254 Application Reference Guide 
+
+v1 initial release
+
+v2 changes: 					v2 value				v1 value
+  09 Output Driver Power Control Register  0C only LOL/LOR drivers powered up	FF  Power up all drivers
+  0A Common Mode Control Register	    40 1: Full Chip Common Mode is 0.75V	00  Input Com.Mode 0.9V and Out.Com.Mode for Headphone to In.Com.Mode
+  12 Set the HPL gain dB		    03 dB					12 dB
+  13 Set the HPR gain dB		    03 dB					12 dB
+
+
+
+# Initialize to Page 0
+00 00	
+# Initialize the device through software reset
+01 01
+# Power up the NDAC divider with value 1
+0B 81
+# Power up the MDAC divider with value 2
+0C 82
+# Program the OSR of DAC to 128
+0D 00	//DOSR MSB DOSR=128
+0E 80	//DOSR LSB DOSR=128
+# Set the word length of I2S Audio Interface to 16bits & 
+BCLK & WCLK is input from the device & DOUT will not be high impedance after data has been transferred 
+1B 00
+# Set the DAC Mode to PRB_P1
+3C 01
+
+
+# Initialize to Page 1
+00 01
+# Disable Internal Crude AVdd in presence of external AVdd supply or before powering up internal AVdd LDO
+01 08
+# Enable Master Analog Power Control. AVDD LDO Powered up
+02 01
+# Set the REF charging time to 40ms
+7B 01
+
+# Full Chip Common Mode is 0.75V
+0A 40
+# Route Left DAC to LOL
+0E 08
+# Route Right DAC to LOR
+0F 08
+
+# Set the HPL gain to 3 dB
+12 03
+# Set the HPR gain to 3 dB
+13 03
+# Power up LOL/LOR drivers
+09 0C
+
+
+
+# Initialize to Page 0
+00 00 
+# Left DAC Channel Powered Up & Right DAC Channel Powered Up & Left DAC data Left Channel Audio Interface Data & Right DAC data Right Channel Audio Interface Data
+3F D4
+# Unmute the DAC digital volume control
+40 00
+
