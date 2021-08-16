@@ -17,7 +17,6 @@ The folders contain the following information:
 * [Porting cores tutorial](Tutorials/Porting-Cores)
 * Buy at Arrow https://www.arrow.com/en/products/deca/arrow-development-tools
 * Intel Community Knowledge Base -DECA https://community.intel.com/t5/FPGA-Wiki/DECA/ta-p/735458
-* Porting cores to DECA https://github.com/SoCFPGA-learning/DECA/tree/main/Tutorials/Porting-Cores
 
 ## **Quartus configuration**
 

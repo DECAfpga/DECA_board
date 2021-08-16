@@ -14,11 +14,11 @@ Follows a list of useful resources that were published mainly in the [DECA teleg
 
 * Video overview https://www.youtube.com/watch?v=8SaMVaniz8U
 
-* DECA collaborative community repository https://github.com/SoCFPGA-learning/DECA  Repositorio colaborativo de la comunidad DECA
+* Cores development for the DECA FPGA board https://github.com/DECAfpga
 
-* Porting cores to DECA board  https://github.com/SoCFPGA-learning/DECA/tree/main/Tutorials/Porting-Cores
+  * [OLD SITE] DECA collaborative community repository https://github.com/SoCFPGA-learning/DECA  
 
-* Using DECA's integrated TLV320AIC3254 Audio DAC https://github.com/SoCFPGA-learning/DECA/tree/main/Tutorials/Porting-Cores/AudioCODEC
+* Porting cores to DECA board  https://github.com/DECAfpga/DECA_board/tree/main/Tutorials/Porting-Cores (Using DECA's integrated TLV320AIC3254 Audio DAC, HDMI TX, Micro SD card, ...)
 
   
 
