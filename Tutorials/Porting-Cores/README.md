@@ -12,9 +12,7 @@ See below for target cores and porting from them.
 
 ### Video using an VGA adapter
 
-Using an VGA adapter (333) like https://www.waveshare.com/vga-ps2-board.htm
-
-See [VGA conversion from 666 to 333](VGA333)
+See [VGA conversion from 666 to 333](VGA333), using an VGA adapter (333) like https://www.waveshare.com/vga-ps2-board.htm
 
 ### SD card 
 
