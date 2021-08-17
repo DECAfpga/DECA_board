@@ -95,7 +95,7 @@ graphic.add(
         y=85,
         body={"width": 110, "height": 20},
         pin_pitch=(0, 28),
-        label_start=(60, 0),  # 15 to Offset
+        label_start=(60, 15),  # 15 to Offset
         label_pitch=(0, -28),
         scale=(1, -1),
         labels=data.rhs_inner_numbered,
@@ -138,7 +138,7 @@ graphic.add(
         y=85,
         body={"width": 110, "height": 20},
         pin_pitch=(0, 28),
-        label_start=(50, 0),  # 15 to Offset
+        label_start=(50, 15),  # 15 to Offset
         label_pitch=(0, 28),
         scale=(-1, 1),
         labels=data.lhs_inner_numbered,
