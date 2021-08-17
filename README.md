@@ -43,7 +43,7 @@ The folders contain the following information:
 
 
 
-### Contact media
+## Contact media
 
 * [Telegram group](https://t.me/Deca_Max10_FPGA) 
 * [Discord channel](https://discord.gg/YDdmtwh) 
