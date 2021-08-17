@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Sun Jun 20 00:38:39 2021
+Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+Revision Name : HDMI_TX
+Top-level Entity Name : HDMI_TX
+Family : MAX 10
+Total logic elements : 353
+    Total combinational functions : 331
+    Dedicated logic registers : 164
+Total registers : 164
+Total pins : 202
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 2
+UFM blocks : 0
+ADC blocks : 0

@@ -1,0 +1,18 @@
+Fitter Status : Successful - Sun Jun 20 00:39:09 2021
+Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+Revision Name : HDMI_TX
+Top-level Entity Name : HDMI_TX
+Family : MAX 10
+Device : 10M50DAF484C6GES
+Timing Models : Preliminary
+Total logic elements : 346 / 49,760 ( < 1 % )
+    Total combinational functions : 332 / 49,760 ( < 1 % )
+    Dedicated logic registers : 164 / 49,760 ( < 1 % )
+Total registers : 164
+Total pins : 202 / 360 ( 56 % )
+Total virtual pins : 0
+Total memory bits : 0 / 1,677,312 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 288 ( 0 % )
+Total PLLs : 2 / 4 ( 50 % )
+UFM blocks : 0 / 1 ( 0 % )
+ADC blocks : 0 / 2 ( 0 % )
