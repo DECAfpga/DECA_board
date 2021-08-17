@@ -1,53 +1,35 @@
-## SDRAM Mister module adapter for DECA
+# DECA board target for Litex
 
-### Objectives and considerations
+[deca_litex_target.py](deca_litex_target.py)  is part of [LiteX-Boards](https://github.com/litex-hub/litex-boards) and was made by [Hans Baier](https://github.com/hansfbaier).
 
-* Build an adapter to plug a 40 pin Mister SDRAM on DECA board
-* Memory tested is SDRAM board for MiSTer (extra slim) XS_2.2
-* Test memory is working
-
-
-### Resources of information
-
-* SDRAM XS v2.2 Altium schematics from Sorgelig
-* DECA schematics
-* De10-nano schematics
-
-### Schematic
-
-See full schematic [sdram_xs-SchDoc.pdf](sdram_xs-SchDoc.pdf) 
-
-See Kicad folder.
-
-![image-20210420203647994](schematic.png)
+It includes the DECA board pin locations for MiSTer SDRAM ([via GPIO expansion board on P8](https://github.com/DECAfpga/DECA_board/tree/main/Sdram_mister_deca)).
 
 
 
-### Assembly instructions 
-
-* Buy an stackable male male header like the ones sold in this [pack](https://www.arrow.com/en/products/205-0001-02/schmartboard).
-
-* Cut pins in the stackable header that correspond to pins 12, 29, 30 from the SDRAM module. 
-* Solder external pins to the SDRAM module in pins 12, 29 & 30.
-* Plug SDRAM module into the stackable header and this into the P8 DECA connector.
-* Connect jumper wires at external soldered pins in 12, 29 & 30 according to schematic. It is important to connect at least one of the ground pins (I suggest pin 12) from SDRAM module to GND in P8 pins (1, 2).  Pin 29 (3V3) and pin 30 (GND) from SDRAM can be connected to P9 connector pins 3 (3V3) and 1 (GND).
-
-### ![stackable-headers](stackable-headers.jpg)
-
-![outward](outward.jpg)
-
-![inward](inward.jpg)
+[LiteX installation guide](https://github.com/enjoy-digital/litex/wiki/Installation)
 
 
 
-### Memory test
-
-I tested the memory with [Litex](https://github.com/enjoy-digital/litex) memory test. 
+Go to the litex boards targets folder and export paths to Quartus:
 
 ```sh
-# Download specific Deca target from https://github.com/SoCFPGA-learning/DECA/blob/main/deca-litex-target.py 
-#into the folder litex-boards/litex_boards/targets and make it executable. 
-#Thanks to Hans Baier for it.
+cd /home/jordi/bin/litex-boards/litex_boards/targets
+
+export PATH="/home/jordi/bin/intelFPGA_lite/17.1/quartus/bin:$PATH"
+
+#only if RiscV code needs to be compiled
+export PATH=$PATH:/home/jordi/bin/riscv64-unknown-elf-gcc-8.3.0-2019.08.0-x86_64-linux-ubuntu14/bin/
+```
+
+
+
+Example testing MiSTer SDRAM with [Litex](https://github.com/enjoy-digital/litex) memory test. 
+
+```sh
+# Download specific Deca target from 
+# https://github.com/SoCFPGA-learning/DECA/blob/main/deca-litex-target.py 
+# into the folder litex-boards/litex_boards/targets and make it executable. 
+# Thanks to Hans Baier for it.
 wget https://github.com/DECAfpga/DECA_board/blob/main/Litex/deca_litex_target.py
 chmod +x deca-litex-target.py
 #Compile and load Litex for DECA board with Mister SDRAM option 
@@ -62,4 +44,64 @@ mem_speed 0x40000000 0x2000000
 
 
 
-![image-20210420212040405](litex.png)
+**Other examples usign the stock terasic_deca.py target:**
+
+```sh
+#Serial over USB-Blaster
+
+./terasic_deca.py --uart-name=serial --build   --load
+#build generat a /home/jordi/bin/litex-boards/litex_boards/targets/build/deca
+
+./terasic_deca.py --load
+
+#Alternativament programar manualment
+
+# cd ~/bin/litex-boards/litex_boards/targets/build/deca/gateware
+
+# ./build_deca.sh
+
+# quartus_pgm -m jtag -o "p;deca.sof"
+
+nios2-terminal 
+```
+
+
+
+```sh
+#GPIO Serial
+#Subsignal("tx", Pins("P8:3")),-> pin 03 (White C96 cable) GPIO0_D0
+#Subsignal("rx", Pins("P8:4")),-> pin 04 (Green C96 cable) GPIO0_D1
+
+#                       ground -> pin 1 / 2 (Black)  
+
+./terasic_deca.py --uart-name=gpio_serial --build --load
+
+#terminal
+lxterm --serial-boot  /dev/ttyUSB0
+picocom -b 115200 /dev/ttyUSB0
+```
+
+
+
+
+
+```sh
+#adding RAM for avoiding upload fails (CRC errors)
+./terasic_deca.py --uart-name=gpio_serial --integrated-main-ram-size 0x4000 --build --load
+
+#terminal
+picocom -b 115200 /dev/ttyUSB0
+```
+
+
+
+
+
+```sh
+#to load an app
+litex_bare_metal_demo --build-path=build/terasic_deca
+litex_term --serial-boot --kernel demo.bin /dev/ttyUSB0
+[enter]
+litex>serialboot
+```
+

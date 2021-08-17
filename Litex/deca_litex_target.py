@@ -8,7 +8,7 @@
 
 # To use the MiSTer SDRAM option, please connect the SDRAM
 # module as described here:
-# https://github.com/SoCFPGA-learning/DECA/tree/main/Projects/sdram_mister_deca
+# https://github.com/DECAfpga/DECA_board/tree/main/Sdram_mister_deca
 
 import os
 import argparse
