@@ -1,0 +1,8 @@
+# Cores
+
+Check projects folders.
+
+
+
+
+

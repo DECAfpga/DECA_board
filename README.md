@@ -10,6 +10,7 @@ The folders contain the following information:
 * **Sdram_mister_deca**:  Hack to easily adapt a Mister SDRAM memory module to your Deca board
 * **Litex**: Deca board target with Mister SDRAM for [Litex](https://github.com/enjoy-digital/litex) and Litex examples
 * **FuseSoC**: Tutorial on FuseSoC with Deca board
+* **Cores**: Sample cores 
 
 ## **Useful resources:**
 
