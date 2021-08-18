@@ -2,14 +2,14 @@
 
 [DeMiSTify](https://github.com/robinsonb5/DeMiSTify)  is support code intended to assist in the porting of MiST FPGA cores to other target boards (Copyright (c) 2021 by Alastair M. Robinson).
 
-Follows a brief guide on how to use it (AMR indicates notes of the autor):
+Follows a brief guide on how to use it ( comments from Alastair M. Robinson indicated as AMR ):
 
-* Download a new Mist core to be ported to DECA or any other board supported (in the following lines where you see deca replace it with your own board name)
-* Get another DeMiSTifyed core and copy the following objects  (** see note below)
+* Download a new Mist core to be ported to DECA or any other board supported (in the following tutorial where you see deca replace it with your own board name)
+* Get a recent DeMiSTifyed core and copy the following objects  (** see notes below)
 
 ![core](core.png)
 
-**Note: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but add the following into the .gitmodules file:
+**Note 1: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but add the following into the .gitmodules file:
 
 ```sh
 [submodule "DeMiSTify"]
@@ -18,18 +18,20 @@ Follows a brief guide on how to use it (AMR indicates notes of the autor):
 #url will soon be changed to main DeMiSTify Alastair Repository when it's merged
 ```
 
+**Note 2: the rest of files can be taken from templates folder (DeMiSTify/templates)
+
 * Makefile: Edit Makefile and change the name of the project. The rest should be fine.
 
-* Oric.qip: Change filename of Oric.qip to deca.qip and fill in with the original core files from Mist project (qsf) respecting the format of Oric.qip.  
+* Oric.qip: Change filename of Oric.qip to deca.qip and fill in with the original files from Mist core (found in .qsf) respecting the format of Oric.qip.  
 
-  * Don't include the pll file, as it will be included in top.qip from the deca folder.
-  * Leave the original constraint file, but will be need to be edited as commented below
+  * Don't include the pll file, as it will be included in top.qip at deca folder.
+  * Leave the original constraint file, but it will need to be edited as commented below
 
 * project_files.rtl is a bit like a .qip file but not quartus-specific.  
 
 * project_defs.tcl  edit and check the settings like project and requires_sdram
 
-* build_id.mk. 
+* build_id.mk
 
   * AMR: isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time.
   * AMR: The build_id.tcl is a pre-flow script which generates a build_id.v file - it just depends on what the mist core wants - most of them generate a version string which is included in the config string.  Some cores are not usign this so this file can be ignored.
@@ -38,23 +40,23 @@ Follows a brief guide on how to use it (AMR indicates notes of the autor):
 
   ![deca](deca.png)
 
-* Replace pll.x with the project's Mist core pll, changing clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
+* Board specific files: audio folder and LOOP.hex are deca specific board files to deal with I2S audio output. These files are included in Board/deca/deca_support.tcl
+
+* PLL: In deca folder you will need to add the pll files from the original Mist core but adapting the clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
 
   * AMR: What I usually do is open the MiST project, and have a look at the PLL, then create a new one for the target board, with the same output frequencies, but the appropriate input frequency.  
   * AMR: the Clock27 input on the MiST core that we're wrapping - it's not 27MHz, it's whatever clock the board provides.  It'd just be too much of a pain to rename it.
 
-* Create a new file named "top.qip" and include project specific files like deca_top.vhd and plls. 
+* top.qip: Create a new file named "top.qip" and include project specific files like deca_top.vhd and PLLs. 
 
   * AMR: "I normally have a root .qip which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too."  
-
-  
 
 * demistify_config_pkg.vhd  can be included in project_files.rtl 
 
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * Edit it and change the guest module name.
-  * AMR: deca_top.vhd will probably be nearly identical to the one for the Oric core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not CLOCK27 is defined with one input or two.. (Annoyingly that varies from core to core!)
+  * AMR: deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!).
 
 * If needed to adapt anything, adjustments to board definition can be found inside the DeMiSTify/Board/xxxx folder
 
