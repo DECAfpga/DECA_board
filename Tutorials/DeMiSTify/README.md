@@ -18,18 +18,27 @@ Follows a brief guide on how to use it (AMR indicates notes of the autor):
 #url will soon be changed to main DeMiSTify Alastair Repository when it's merged
 ```
 
-* Change file name of Oric.qip to deca.qip and fill in with the original core files from Mist project (qsf) respecting the format of Oric.qip.  
+* Makefile: Edit Makefile and change the name of the project. The rest should be fine.
 
-  * Don't include the pll file, as it will be included in the deca folder.
-  * Leave the original constraint file, but will be need to be edited as seen below
+* Oric.qip: Change filename of Oric.qip to deca.qip and fill in with the original core files from Mist project (qsf) respecting the format of Oric.qip.  
 
-* Edit Makefile and change the name of the project.
+  * Don't include the pll file, as it will be included in top.qip from the deca folder.
+  * Leave the original constraint file, but will be need to be edited as commented below
+
+* project_files.rtl is a bit like a .qip file but not quartus-specific.  
+
+* project_defs.tcl  edit and check the settings like project and requires_sdram
+
+* build_id.mk. 
+
+  * AMR: isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time.
+  * AMR: The build_id.tcl is a pre-flow script which generates a build_id.v file - it just depends on what the mist core wants - most of them generate a version string which is included in the config string.  Some cores are not usign this so this file can be ignored.
 
 * In deca folder just leave the following files:
 
   ![deca](deca.png)
 
-* Replace pll.xxx with the Mist core pll, changing clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
+* Replace pll.x with the project's Mist core pll, changing clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
 
   * AMR: What I usually do is open the MiST project, and have a look at the PLL, then create a new one for the target board, with the same output frequencies, but the appropriate input frequency.  
   * AMR: the Clock27 input on the MiST core that we're wrapping - it's not 27MHz, it's whatever clock the board provides.  It'd just be too much of a pain to rename it.
@@ -37,7 +46,10 @@ Follows a brief guide on how to use it (AMR indicates notes of the autor):
 * Create a new file named "top.qip" and include project specific files like deca_top.vhd and plls. 
 
   * AMR: "I normally have a root .qip which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too."  
-  * AMR: "demistify_config_pkg.vhd  Probably best to put it in the root .qip actually - then you don't have to do it for every board."
+
+  
+
+* demistify_config_pkg.vhd  can be included in project_files.rtl 
 
 * deca_top.vhd is a wrapper for the original Mist core.  
 
