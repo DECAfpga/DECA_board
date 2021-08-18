@@ -9,7 +9,7 @@ Follows a brief guide on how to use it (AMR indicates notes of the autor):
 
 ![core](core.png)
 
-**Note: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but add the following into the .gitmodules file
+**Note: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but add the following into the .gitmodules file:
 
 ```sh
 [submodule "DeMiSTify"]
@@ -36,7 +36,8 @@ Follows a brief guide on how to use it (AMR indicates notes of the autor):
 
 * Create a new file named "top.qip" and include project specific files like deca_top.vhd and plls. 
 
-  * AMR: "I normally have a root .qip which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too."
+  * AMR: "I normally have a root .qip which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too."  
+  * AMR: "demistify_config_pkg.vhd  Probably best to put it in the root .qip actually - then you don't have to do it for every board."
 
 * deca_top.vhd is a wrapper for the original Mist core.  
 
@@ -67,8 +68,10 @@ make BOARD=deca init
 ```
 
 * When you do "make BOARDS=deca init" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file.
-* And "make" will do make init, followed by make compile for all boards defined in the makefile.
-* When if finishes you will have the ported core inside the deca folder including the bitstream in output_files folder
+* "make BOARDS=deca" will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use make BOARDS=deca init
+* "make" will do make init, followed by make compile for all boards defined in the makefile.
+* makefile recognizes commands "init" "compile" "firmware" and "firmware_clean". If you don't supply a command it does everything.
+* When if finishes you will have the ported core inside the deca folder. Without init you will find the bitstream in output_files folder also.
 
 
 
