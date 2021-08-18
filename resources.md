@@ -36,6 +36,7 @@ Follows a list of useful resources that were published mainly in the [DECA teleg
 
 *  **DECA Intel Community Knowledge Base** https://community.intel.com/t5/FPGA-Wiki/DECA/ta-p/735458      (GitHub with material from  Intel Community Knowledge Base  https://github.com/snikrepmada/DECA )
 *  DECA Linux Tutorial For the MAX® 10 DECA FPGA Evaluation Kit https://www.intel.com/content/dam/altera-www/global/en_US/uploads/c/ca/DECA-Linux-Tutorial_15_1.pdf
+*  **Intel design store**  https://fpgacloud.intel.com/devstore/platform/?page=1&acds_version=any&family=max-10&board=9
 
 ### MAX10 Labs / Tutorials:
 
