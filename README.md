@@ -4,13 +4,21 @@ The DECA Development Kit presents a robust hardware design platform built around
 
 The folders contain the following information:
 
-* **Tutorials**: Porting cores tutorials and others
+* **Tutorials**: Porting cores tutorials, DeMiSTify, ...
+
 * **Documents**: Various useful documentation (schematics, images, ...)
+
 * **Deca_pinout**:  Pinout of the Deca board Beaglebone Black connectors
+
 * **Sdram_mister_deca**:  Hack to easily adapt a Mister SDRAM memory module to your Deca board
+
 * **Litex**: Deca board target with Mister SDRAM for [Litex](https://github.com/enjoy-digital/litex) and Litex examples
+
 * **FuseSoC**: Tutorial on FuseSoC with Deca board
+
 * **Cores**: Sample cores 
+
+  
 
 ## **Useful resources:**
 
