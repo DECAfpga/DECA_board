@@ -4,12 +4,14 @@
 
 Follows a brief guide on how to use it ( comments from Alastair M. Robinson indicated as AMR ):
 
-* Download a new Mist core to be ported to DECA or any other board supported (in the following tutorial where you see deca replace it with your own board name)
-* Get a recent DeMiSTifyed core and copy the following objects  (** see notes below)
+* Download a new Mist core to be ported to DECA or any other board supported (in the following tutorial where you see deca replace it with your own board name). In this tutorial we are porting NES core.
+* Get a recent DeMiSTifyed core and copy the following objects or see notes ** below
 
 ![core](core.png)
 
-**Note 1: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but add the following into the .gitmodules file:
+ In this tutorial we are taking the previous Oric core ported with DeMiSTify.
+
+** Note 1: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but edit and add the following lines into the .gitmodules file:
 
 ```sh
 [submodule "DeMiSTify"]
@@ -18,7 +20,7 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 #url will soon be changed to main DeMiSTify Alastair Repository when it's merged
 ```
 
-**Note 2: the rest of files can be taken from templates folder (DeMiSTify/templates)
+** Note 2: the rest of files can be taken from templates folder (DeMiSTify/templates)
 
 * Makefile: Edit Makefile and change the name of the project. The rest should be fine.
 
@@ -29,7 +31,7 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 
 * project_files.rtl is a bit like a .qip file but not quartus-specific.  
 
-* project_defs.tcl  edit and check the settings like project and requires_sdram
+* project_defs.tcl  edit and check settings like project and requires_sdram
 
 * build_id.mk
 
@@ -40,7 +42,7 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 
   ![deca](deca.png)
 
-* Board specific files: audio folder and LOOP.hex are deca specific board files to deal with I2S audio output. These files are included in Board/deca/deca_support.tcl
+* Board specific files: audio folder and LOOP.hex are deca specific board files to deal with I2S audio output. These files are defined in Board/deca/deca_support.tcl
 
 * PLL: In deca folder you will need to add the pll files from the original Mist core but adapting the clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
 
