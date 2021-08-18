@@ -4,7 +4,7 @@
 
 Follows a brief guide on how to use it ( comments from Alastair M. Robinson indicated as AMR ):
 
-* Download a new Mist core to be ported to DECA or any other board supported (in the following tutorial where you see deca replace it with your own board name). In this tutorial we are porting NES core.
+* Clone the target Mist core to be ported to DECA or any other board supported (in the following tutorial where you see deca replace it with your own board name). In this tutorial we are porting NES core.
 * Get a recent DeMiSTifyed core and copy the following objects or see notes ** below
 
 ![core](core.png)
