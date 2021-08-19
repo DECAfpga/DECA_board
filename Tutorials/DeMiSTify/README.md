@@ -11,7 +11,7 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 
   url will soon be changed to main DeMiSTify Alastair repository when it's merged
 
-* Get a recent DeMiSTifyed core (In this tutorial we are taking the Oric core) and check the following objects are in your new core. You can copy missing files or get them from templates folder (DeMiSTify/templates)
+* Get a recent DeMiSTifyed core (In this tutorial we are taking the [Oric](https://github.com/rampa069/Oric_Mist_48K) core) and check the following objects are in your new core. You can copy missing files or get them from templates folder (DeMiSTify/templates)
 
 ![core](core.png)
 
@@ -63,14 +63,15 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 * Compile the project:
 
 ```sh
+#If you haven't added it before, add DeMiSTify as a submodule now
+git submodule add git@github.com:DECAfpga/DeMiSTify.git 
 #submodules will be downloaded, including DeMiSTify if you added it in the .gitmodules
-git submodule update --init --recursive
+#git submodule update --init --recursive
 #following is not going to be needed when dev branch is merged with main 
 cd DeMiSTify
 git checkout dev
 #edit file site.mk and add your own PATHs to Quartus
 gedit site.mk
-[git add .]
 #go back to root folder and do a make with board target (deca, sidi, neptuno, ...)
 cd ..
 make BOARD=deca init
