@@ -22,3 +22,7 @@ Made with [Pinout](https://github.com/j0ono0/pinout). For more information on *p
 
 
 
+## Comments on double row connectors styling
+
+Check this [Github issue](https://github.com/j0ono0/pinout/issues/41). 
+
