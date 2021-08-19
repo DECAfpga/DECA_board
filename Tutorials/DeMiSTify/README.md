@@ -70,7 +70,7 @@ cd DeMiSTify
 git checkout dev
 #edit file site.mk and add your own PATHs to Quartus
 gedit site.mk
-git add .
+[git add .]
 #go back to root folder and do a make with board target (deca, sidi, neptuno, ...)
 cd ..
 make BOARD=deca init
