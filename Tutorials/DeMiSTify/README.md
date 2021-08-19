@@ -29,7 +29,7 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 
   * AMR: isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time.
   * AMR: The build_id.tcl is a pre-flow script which generates a build_id.v file - it just depends on what the mist core wants - most of them generate a version string which is included in the config string.  Some cores are not usign this so this file can be ignored.
-* Create folder "firmware" at root and add to it file "overrides.c". Edit file and add initial ROM from the core if any.
+* Create folder "firmware" at root and create inside file "overrides.c". Edit file and add the following if the core needs to boot a ROM at core bootup:
 
 ```
 /* Initial ROM */
@@ -79,8 +79,8 @@ const char *bootrom_name="AUTOBOOTNES";
 ```sh
 #If you haven't added it before, add DeMiSTify as a submodule now
 git submodule add git@github.com:DECAfpga/DeMiSTify.git 
-#submodules will be downloaded, including DeMiSTify if you added it in the .gitmodules
-#git submodule update --init --recursive
+#Do a first make (will finish in error). It will download missing submodules 
+make BOARD=deca 
 #following is not going to be needed when dev branch is merged with main 
 cd DeMiSTify
 git checkout dev
@@ -88,14 +88,13 @@ git checkout dev
 gedit site.mk
 #go back to root folder and do a make with board target (deca, sidi, neptuno, ...)
 cd ..
-make BOARD=deca init
+make BOARD=deca 
 ```
 
-* When you do "make BOARDS=deca init" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file.
+* When you do "make BOARDS=deca" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file. When if finishes you will have the ported core inside the deca folder. 
 * "make BOARDS=deca" will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use make BOARDS=deca init
 * "make" will do make init, followed by make compile for all boards defined in the makefile.
 * makefile recognizes commands "init" "compile" "firmware" and "firmware_clean". If you don't supply a command it does everything.
-* When if finishes you will have the ported core inside the deca folder. Without init you will find the bitstream in output_files folder also.
 
 
 
