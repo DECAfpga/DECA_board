@@ -5,22 +5,15 @@
 Follows a brief guide on how to use it ( comments from Alastair M. Robinson indicated as AMR ):
 
 * Clone the target Mist core to be ported to DECA or any other board supported (in the following tutorial where you see deca replace it with your own board name). In this tutorial we are porting NES core.
-* Get a recent DeMiSTifyed core and copy the following objects or see notes ** below
+
+* Add DeMiSTify to project as a submodule:
+   `git submodule add git@github.com:DECAfpga/DeMiSTify.git `
+
+  url will soon be changed to main DeMiSTify Alastair repository when it's merged
+
+* Get a recent DeMiSTifyed core (In this tutorial we are taking the Oric core) and check the following objects are in your new core. You can copy missing files or get them from templates folder (DeMiSTify/templates)
 
 ![core](core.png)
-
- In this tutorial we are taking the previous Oric core ported with DeMiSTify.
-
-** Note 1: to get the latest version of DeMiSTify don't copy the DeMiSTify folder but edit and add the following lines into the .gitmodules file:
-
-```sh
-[submodule "DeMiSTify"]
-	path = DeMiSTify
-	url = git@github.com:DECAfpga/DeMiSTify.git
-#url will soon be changed to main DeMiSTify Alastair Repository when it's merged
-```
-
-** Note 2: the rest of files can be taken from templates folder (DeMiSTify/templates)
 
 * Makefile: Edit Makefile and change the name of the project. The rest should be fine.
 
@@ -70,14 +63,14 @@ Follows a brief guide on how to use it ( comments from Alastair M. Robinson indi
 * Compile the project:
 
 ```sh
-#in the root folder of project (where you copied the makefile)
-make
 #submodules will be downloaded, including DeMiSTify if you added it in the .gitmodules
-cd DeMiSTify
+git submodule update --init --recursive
 #following is not going to be needed when dev branch is merged with main 
+cd DeMiSTify
 git checkout dev
 #edit file site.mk and add your own PATHs to Quartus
 gedit site.mk
+git add .
 #go back to root folder and do a make with board target (deca, sidi, neptuno, ...)
 cd ..
 make BOARD=deca init
