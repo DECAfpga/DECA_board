@@ -14,9 +14,29 @@ git clone https://github.com/DECAfpga/DeMiSTify-template
 
 * Download the target Mist core to be ported to DECA or any other board supported 
   * In the following tutorial where you see "deca" replace it with your own board name. 
+  
 * Copy Mist core files into the DeMiSTify template folder. 
-  * overwrite README.md
-  * combine content of files .gitmodules
+  * overwrite README.mdgit 
+  
+* You can safely delete board folders which you are not porting to.
+
+* Template already includes /sys folder for Sorgelig cores. If you don't use it you can safely remove it. In case the core is using mist_modules from  Slingshot you need to add original core missing submodules.
+
+* Add original core missing submodules (check .gitmodules file from Mist repo):
+
+  ```sh
+  #e.g. required submodules for Mist NES core
+  cd DeMiSTify-template
+  cd mist
+  rm -r mist-modules
+  git submodule add https://github.com/mist-devel/mist-modules.git
+  cd ..
+  cd src
+  rm -r T65
+  git submodule add https://github.com/mist-devel/T65.git
+  cd ..
+  git submodule update
+  ```
 
 ### Root project folder
 
@@ -52,7 +72,11 @@ Modify / create the following files and folders:
 
   * optimizeforspeed 1 takes long time to generate output bitstream because it uses OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE". 
 
-* firmware/overrides.c : Create a folder named "firmware" and create inside a file named "overrides.c". Edit file and add the following if the core needs to boot a ROM during bootup:
+* firmware/overrides.c : Create a folder named "firmware" 
+
+  * Copy here the file /DeMiSTify/templates/config.h here and change definitions according to the core
+    * set to #undef if your core does not use those options
+  * Create inside a file named "overrides.c". Edit file and add the following if the core needs to boot a ROM during bootup:
 
 ```
 /* Initial ROM for NES core*/
@@ -89,18 +113,21 @@ Modify / create the following files:
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * Edit it and change the guest module name.
-  * To supply audio samples for I2S sound you would need to get out the DAC inputs from Mist top to the deca top. 
-    * If the audio's super-loud and scratchy then you probably have a problem with signed vs. unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
+  * If the audio's super-loud and scratchy then you probably have a problem with signed vs. unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
   * AMR: deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!).
+
+### Changes in Mist core
+
+From the original Mist core it may be needed to adapt just a few things:
+
+* To supply audio samples for I2S sound you would need to get out the DAC inputs from Mist top to the deca top. 
+* If you change memory controller then you would also need to adapt the Mist top controller instantiation
+* Constraints file: remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/deca/constraints.sdc)
+  * AMR: It'll need adapting - usually it's just a case of removing the MiST names for signals and replacing them with the variables defined in the board-specific constraints files.
 
 ### Others
 
 * If needed to adapt anything, adjustments to board definition can be found inside the DeMiSTify/Board/xxxx folder
-
-* From the original Mist core it may be needed to adapt just few things, e.g.:
-  * constraints file: remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/deca/constraints.sdc)
-    * AMR: It'll need adapting - usually it's just a case of removing the MiST names for signals and replacing them with the variables defined in the board-specific constraints files.
-  
 * Quartus log: execute `tail -f compile.log` in ther deca folder
 
 ### Compile the project
