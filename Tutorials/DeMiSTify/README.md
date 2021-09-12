@@ -70,11 +70,11 @@ Modify / create the following files and folders:
 
 * project_defs.tcl  edit and check parameters project, requires_sdram, optimizeforspeed
 
-  * optimizeforspeed 1 takes long time to generate output bitstream because it uses OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE". 
+  * optimizeforspeed 1 Remove this line to avoid  OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE" which takes long time to generate output bitstream.
 
-* firmware/overrides.c : Create a folder named "firmware" 
+* firmware: Create a folder named "firmware" 
 
-  * Copy here the file /DeMiSTify/templates/config.h here and change definitions according to the core
+  * Copy here the file /DeMiSTify/templates/config.h and change definitions accordingly
     * set to #undef if your core does not use those options
   * Create inside a file named "overrides.c". Edit file and add the following if the core needs to boot a ROM during bootup:
 
@@ -145,12 +145,11 @@ cd ..
 make
 ```
 
-* When you do "make BOARDS=deca" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file. When if finishes you will have the ported core inside the deca folder. 
-* "make BOARDS=deca" will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use make BOARDS=deca init
 * "make" will do make init, followed by make compile for all boards defined in the makefile.
 * makefile recognizes commands "init" "compile" "firmware" and "firmware_clean". If you don't supply a command it does everything.
 
-
+* "make BOARDS=deca" will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use make BOARDS=deca init
+* When you do "make BOARDS=deca" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file. When if finishes you will have the ported core inside the deca folder. Generated bitstream will be at deca/output_files.
 
 ## Troubleshooting
 
