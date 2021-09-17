@@ -58,19 +58,18 @@ Modify / create the following files and folders:
 
   * Leave the original constraint file, but it would require to be edited as commented below.
 
-* build_id.mk
-
-  * AMR: It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time.
-  * AMR: The build_id.tcl is a pre-flow script which generates a build_id.v file - it just depends on what the mist core wants - most of them generate a version string which is included in the config string.  Some cores are not usign this so this file can be ignored.
-  
 * project_files.rtl is a bit like a .qip file but not quartus-specific. 
 
   * remove included .qip files in template for your own ones (usually just a mistcore.qip file in the root folder
-  * If pre-flow scripts build_id.tcl is not used in core remove it
+  * If pre-flow scripts like build_id.tcl is not used in core remove it
+
+    * AMR: It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time. Most of them generate a version string which is included in the config string.  
 
 * project_defs.tcl  edit and check parameters project, requires_sdram, optimizeforspeed
 
   * set optimizeforspeed 0  to avoid  OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE" which takes long time to generate output bitstream.
+
+* demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
 
 * firmware
 
@@ -107,8 +106,6 @@ Modify and/or create the following files:
   * AMR: I normally have a root .qip which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too.
 
 * .hex files:  if the Mist project include .hex files, copy them to board folder as it's the place where they can be found
-
-* demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
 
 * deca_top.vhd is a wrapper for the original Mist core.  
 
@@ -164,17 +161,16 @@ Update with your own PATHs to Quartus and sof filename:
 cd deca/output_files/
 export PATH="/home/jordi/bin/intelFPGA_lite/17.1/quartus/bin:$PATH"
 quartus_pgm --mode=jtag -o "p;NES_deca.sof"
+
 ```
 
-
-
-## Troubleshooting
+### Troubleshooting
 
 * Problems loading initial ROM file:    You may have to override a function in firmware/overrides.c to make sure the io index is correct, adding the line    `const char *bootrom_name="SVI328  ROM";`  to firmware/overrides.c  ( note the filename must be in 8/3 format with no dot).
 
 
 
-## Notes about Constraint files
+### Notes about Constraint files
 
 * It's ok to have two constraint files in the core, one project specific and one board specific
   * AMR: the board-specific one does things like "set RAM_OUT {DRAM_DQ* DRAM_ADDR* DRAM_BA* DRAM_RAS_N DRAM_CAS_N DRAM_WEN DRAM*DQM DRAM_CS_N DRAM_CKE}".  The SPI clock is defined in the board constraints too.

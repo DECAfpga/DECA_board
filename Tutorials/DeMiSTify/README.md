@@ -18,7 +18,7 @@ git clone https://github.com/DECAfpga/DeMiSTify-template
   * In the following tutorial where you see "deca" replace it with your own board name. 
   
 * Copy Mist core files into the DeMiSTify template folder. 
-  * overwrite README.mdgit 
+  * overwrite README.md, but not .gitmodules or .gitignore
   
 * You can safely delete board folders which you are not porting to.
 
@@ -37,7 +37,7 @@ git clone https://github.com/DECAfpga/DeMiSTify-template
   rm -r T65
   git submodule add https://github.com/mist-devel/T65.git
   cd ..
-  git submodule update
+  git submodule update --init
   ```
 
 ### Root project folder
@@ -60,19 +60,17 @@ Modify / create the following files and folders:
 
   * Leave the original constraint file, but it would require to be edited as commented below.
 
-* build_id.mk
-
-  * AMR: It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time.
-  * AMR: The build_id.tcl is a pre-flow script which generates a build_id.v file - it just depends on what the mist core wants - most of them generate a version string which is included in the config string.  Some cores are not usign this so this file can be ignored.
-  
 * project_files.rtl is a bit like a .qip file but not quartus-specific. 
 
   * remove included .qip files in template for your own ones (usually just a corename.qip file in the root folder (e.g. nes.qip))
   * If pre-flow scripts build_id.tcl is not used in core remove it
+    * AMR: It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time. Most of them generate a version string which is included in the config string.  
 
 * project_defs.tcl  edit and check parameters project, requires_sdram, optimizeforspeed
 
   * optimizeforspeed 1 Remove this line to avoid  OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE" which takes long time to generate output bitstream.
+
+* demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
 
 * firmware: Create a folder named "firmware" 
 
@@ -110,13 +108,12 @@ Modify / create the following files:
 
 * .hex files:  if the Mist project include .hex files, copy them to board folder as it's the place where they can be found
 
-* demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
-
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * Edit it and change the guest module name.
   * If the audio's super-loud and scratchy then you probably have a problem with signed vs. unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
   * AMR: deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!).
+
 
 ### Changes in Mist core
 
@@ -149,17 +146,30 @@ make
 
 * "make" will do make init, followed by make compile for all boards defined in the makefile.
 * makefile recognizes commands "init" "compile" "firmware" and "firmware_clean". If you don't supply a command it does everything.
-
 * "make BOARDS=deca" will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use make BOARDS=deca init
 * When you do "make BOARDS=deca" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file. When if finishes you will have the ported core inside the deca folder. Generated bitstream will be at deca/output_files.
 
-## Troubleshooting
+
+
+### Flash bitstream to FGPA
+
+Update with your own PATHs to Quartus and bitstream .sof filename:
+
+```sh
+cd deca/output_files/
+export PATH="/home/jordi/bin/intelFPGA_lite/17.1/quartus/bin:$PATH"
+quartus_pgm --mode=jtag -o "p;NES_deca.sof"
+```
+
+
+
+### Troubleshooting
 
 * Problems loading initial ROM file:    You may have to override a function in firmware/overrides.c to make sure the io index is correct, adding the line    `const char *bootrom_name="SVI328  ROM";`  to firmware/overrides.c  ( note the filename must be in 8/3 format with no dot).
 
 
 
-## Notes about Constraint files
+### Notes about Constraint files
 
 * It's ok to have two constraint files in the core, one project specific and one board specific
   * AMR: the board-specific one does things like "set RAM_OUT {DRAM_DQ* DRAM_ADDR* DRAM_BA* DRAM_RAS_N DRAM_CAS_N DRAM_WEN DRAM*DQM DRAM_CS_N DRAM_CKE}".  The SPI clock is defined in the board constraints too.
