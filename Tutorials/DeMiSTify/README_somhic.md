@@ -126,6 +126,9 @@ From the original Mist core it may be needed to adapt just a few things:
 ### Others
 
 * If needed to adapt anything, adjustments to board definition can be found inside the DeMiSTify/Board/xxxx folder
+  * deca_pins.tcl: PIN names can be whatever's appropriate for the board.  The job of the board-specific toplevel file is to wire up the board signals to the guest core's signals.
+  * constraints.sdc: non timing-critical  pins would be in the "FALSE_IN" collection
+    * AMR: Provided the source core is well constrained, it's not too bad, because you can use the MiST constraints file as a template.  Again, it's about replacing MiST-specific stuff with generic stuff defined by DeMiSTify. 
 * Quartus log: execute `tail -f compile.log` in ther deca folder
 
 ### Compile the project
@@ -147,11 +150,14 @@ make
 ```
 
 * "make" will do make init, followed by make compile for all boards defined in the makefile.
+
 * makefile recognizes commands "init" "compile" "firmware" and "firmware_clean". If you don't supply a command it does everything.
+
 * "make BOARDS=deca" will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use make BOARDS=deca init
+
 * When you do "make BOARDS=deca" the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file. When if finishes you will have the ported core inside the deca folder. Generated bitstream will be at deca/output_files.
 
-
+  
 
 ### Flash bitstream to FGPA
 
@@ -177,7 +183,24 @@ quartus_pgm --mode=jtag -o "p;NES_deca.sof"
   * AMR: the project one does things like "set_output_delay -clock [get_clocks $sdram_clk] -reference_pin [get_ports ${RAM_CLK}] -max 1.5 [get_ports ${RAM_OUT}]"
   * AMR: It avoids having to write the whole constraints file for every board, every time you port a core.
   * AMR: What's nice is that variables defined in one .sdc file are visible from within subsequent .sdc files.
+  
 * The constraints file will need adapting.  Each board has its own constraints files which define things like the pin names for the RAM, which pins can be treated as false paths, etc.  That way a single project constraints file can be shared between targets.
+
+* set topmodule guest| 
+
+  * AMR: I use it in project-specific constraints files.  For instance, on NES I do this:
+
+    ```
+    set mem_clk   "${topmodule}clock_21mhz|altpll_component|auto_generated|pll1|clk[0]"
+    ```
+
+    Then I can use the same constraints file with MiST, just by having a MiST-specific constraints file set topmodule to ""
+
+    The path to the PLL is then evaluated as guest|clock_21mhz|altpll_component.... on DeMiSTified platforms, and clock_21mhz|altpll_component.... on MiST, using the same constraints file.
+
+    Basically, I'm exploiting a neat trick I discovered: if you define a variable in a constraints file, it's visible from subsequent constraints files.  So I use a board-specific constraints files to set a bunch of variables for each board, which allows me to use one single constraints file for the project, rather than tediously adapting it for every board individually.
+
+    
 
 
 
