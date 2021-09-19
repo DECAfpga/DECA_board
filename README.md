@@ -22,15 +22,17 @@ The folders contain the following information:
 
 ## **Useful resources:**
 
+* Cores development for the DECA FPGA board https://github.com/DECAfpga
+
 * [DECA resources list](resources.md) 
 
 * [Porting cores tutorial](./Tutorials/Porting-Cores)
 
-* Buy at Arrow https://www.arrow.com/en/products/deca/arrow-development-tools
+* Buy it for $37 at Arrow https://www.arrow.com/en/products/deca/arrow-development-tools  (NOT AVAILABLE). The only way to buy it ATM is on some Ebay or Aliexpress resellers at a much higher cost.
 
 * Intel Community Knowledge Base -DECA https://community.intel.com/t5/FPGA-Wiki/DECA/ta-p/735458
 
-* Examples of bare metal RiscV programming with softcore on a fpga https://github.com/infphyny/FpgaRiscV
+* Board review by Tom Verbeure https://tomverbeure.github.io/2021/04/23/Arrow-DECA-FPGA-board.html (explains IO bank voltages)
 
   
 

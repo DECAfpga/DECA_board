@@ -12,13 +12,15 @@ Follows a list of useful resources that were published mainly in the [DECA teleg
 
 * Terasic website https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=&No=944&PartNo=1 
 
-* Video overview https://www.youtube.com/watch?v=8SaMVaniz8U
-
 * Cores development for the DECA FPGA board https://github.com/DECAfpga
 
   * [OLD SITE] DECA collaborative community repository https://github.com/SoCFPGA-learning/DECA  
 
 * Porting cores to DECA board  https://github.com/DECAfpga/DECA_board/tree/main/Tutorials/Porting-Cores (Using DECA's integrated TLV320AIC3254 Audio DAC, HDMI TX, Micro SD card, ...)
+
+* Board review by Tom Verbeure https://tomverbeure.github.io/2021/04/23/Arrow-DECA-FPGA-board.html (explains IO bank voltages)
+
+* Video overview https://www.youtube.com/watch?v=8SaMVaniz8U
 
   
 
