@@ -75,12 +75,17 @@ Modify / create the following files and folders:
 
   * config.h (from DeMiSTify/templates/config.h): edit and change definitions accordingly to your core:
     * set to #undef if your core does not use those options
+    * If you have the menu working on F12, but no joystick emulation, then make sure you have both CONFIG_JOYKEYS and CONFIG_EXTJOYSTICK defined.
+    * AMR: If you edit config.h  you'll need to do a "make firmware clean" followed by "make firmware" - in the near future I'll push some changes to DeMiSTify to make the firmware get rebuilt when you modify config.h
+    
   * Create inside a file named "overrides.c". Edit file and add the following if the core needs to boot a ROM during bootup:
-
-```
-/* Initial ROM for NES core*/
-const char *bootrom_name="AUTOBOOTNES";
-```
+  
+    ```
+    /* Initial ROM for NES core*/
+    const char *bootrom_name="AUTOBOOTNES";
+    ```
+  
+    
 
 ### deca folder
 
@@ -166,7 +171,7 @@ Update with your own PATHs to Quartus and sof filename:
 ```sh
 cd deca/output_files/
 export PATH="/home/jordi/bin/intelFPGA_lite/17.1/quartus/bin:$PATH"
-quartus_pgm --mode=jtag -o "p;NES_deca.sof"
+quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 ```
 
