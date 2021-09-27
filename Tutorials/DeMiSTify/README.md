@@ -27,7 +27,7 @@ Notes:
   Add DeMiSTify as a submodule:
 
 * ```sh
-  git submodule add git@github.com:DECAfpga/DeMiSTify.git
+  git submodule add https://github.com/DECAfpga/DeMiSTify.git
   git submodule update --init 
   
   #[optionally checkout to somhic branch]
@@ -154,16 +154,17 @@ From the original Mist core it may be needed to adapt just a few things:
 #Do a first make (will finish in error). It will download missing submodules 
 make
 #when asked just accept default settings with Enter key
-#edit file site.mk in DeMiSTify folder and add your own PATHs to Quartus
+#Create file site.mk in DeMiSTify folder 
 cd DeMiSTify
 cp site.template site.mk
-#(e.g. /home/jordi/bin/intelFPGA_lite/17.1/quartus/bin)
+#Edit site.mk and add your own PATHs to Quartus 
+#(e.g. Q19 = /home/jordi/bin/intelFPGA_lite/17.1/quartus/bin)
 gedit site.mk
 #[checkout to somhic branch if you did it in the first part]
 git checkout somhic
-#go back to root folder and do a make with board target (deca, sidi, neptuno, ...)
+#Go back to root folder and do a make with board target (deca, neptuno, uareloaded).  If not specified it will compile for all targets. 
 cd ..
-make
+make BOARD=deca
 ```
 
 * `make` will do make init, followed by make compile for all boards defined in the makefile.
