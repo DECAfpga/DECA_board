@@ -16,17 +16,21 @@ Notes:
 
 ### Download DeMiSTify template and Mist core
 
-* Clone a MiST core (in this example we are cloning NES core) and add DeMiSTify as a submodule:
+* Fork a MiST core to your GitHub account from the web interface (In this example we are forking NES core https://github.com/mist-devel/gameboy)
+
+* Clone forked project :
 
   ```sh
-  git clone https://github.com/mist-devel/nes
+  git clone https://github.com/DECAfpga/gameboy
+  #ssh version: git clone git@github.com:DECAfpga/gameboy
   cd nes
   # nes will be referred as the root folder
   ```
 
-  Add DeMiSTify as a submodule:
+* Add DeMiSTify as a submodule:
 
-* ```sh
+  ```sh
+  #submodules urls always is best to get the https version
   git submodule add https://github.com/DECAfpga/DeMiSTify.git
   git submodule update --init 
   
@@ -35,7 +39,7 @@ Notes:
   git checkout somhic
   cd ..
   ```
-  
+
 * Copy in the root folder the content of DeMiSTify/templates/deca-template
 
   ```sh
@@ -96,7 +100,6 @@ Modify / create the following files and folders:
     const char *bootrom_name="AUTOBOOTNES";
     ```
   
-    
 
 ### [deca] board folder
 
@@ -147,6 +150,7 @@ From the original Mist core it may be needed to adapt just a few things:
   * constraints.sdc: non timing-critical  pins would be in the "FALSE_IN" collection
     * AMR: Provided the source core is well constrained, it's not too bad, because you can use the MiST constraints file as a template.  Again, it's about replacing MiST-specific stuff with generic stuff defined by DeMiSTify. 
 * Quartus log: execute `tail -f compile.log` in ther deca folder
+* If you cloned the repo instead of a forking it, you can use the github web interface to create your own fork of the MiST repo and then you can edit .git/config in your local clone so that origin points to your fork instead of mist-devel.  Then you can push to you fork.
 
 ### Compile the project
 
