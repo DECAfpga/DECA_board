@@ -1,0 +1,205 @@
+/** COMMON STYLES */
+
+text {
+    font-family: Verdana, Georgia, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.legendentry text {
+    dominant-baseline: central;
+}
+
+.h1 {
+    font-size: 26px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+/** PIN LABEL */
+.pinlabel__leader {
+    stroke-width: 2;
+    fill: none;
+}
+
+.pinlabel__text {
+    dominant-baseline: central;
+    fill: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    stroke-width: 0;
+    text-anchor: middle;
+}
+
+
+/** PMOD4 */
+.pmod4 .pinlabel__body,
+.pmod4 .swatch__body {
+    fill: #003241;
+}
+
+.pmod4 .pinlabel__leader {
+    stroke: #006241;
+}
+
+/** PMOD5 */
+.pmod5 .pinlabel__body,
+.pmod5 .swatch__body {
+    fill: #265a6d;
+}
+
+.pmod5 .pinlabel__leader {
+    stroke: #006241;
+}
+
+
+/** GP SINGLE */
+.gpsingle .pinlabel__body,
+.gpsingle .swatch__body {
+    fill: #006241;
+}
+
+.gpsingle .pinlabel__leader {
+    stroke: #006241;
+}
+
+/** GN SINGLE */
+.gnsingle .pinlabel__body,
+.gnsingle .swatch__body {
+    fill: rgb(0, 173, 158);
+}
+
+.gnsingle .pinlabel__leader {
+    stroke: rgb(0, 173, 158);
+}
+
+/** POWER */
+.pwr .pinlabel__body,
+.pwr .swatch__body {
+    fill: rgb(173, 0, 0);
+}
+
+.pwr .pinlabel__leader {
+    stroke: rgb(173, 0, 0);
+}
+
+/** COMMS */
+.comms .pinlabel__body,
+.comms .swatch__body {
+    fill: rgb(182, 69, 176);
+}
+
+.comms .pinlabel__leader {
+    stroke: rgb(182, 69, 176);
+}
+
+/** GPIO */
+.gpio .pinlabel__body,
+.gpio .swatch__body {
+    fill: #FFC72C;
+}
+
+.gpio .pinlabel__leader {
+    stroke: #FFC72C;
+}
+
+.gpio .pinlabel__text {
+    fill: #000;
+}
+
+/** ANALOG */
+.analog .pinlabel__body,
+.analog .swatch__body {
+    fill: #4169E1;
+}
+
+.analog .pinlabel__leader {
+    stroke: #4169E1;
+}
+
+/** GROUND */
+.gnd .pinlabel__body,
+.gnd .swatch__body {
+    fill: rgb(33, 33, 33);
+}
+
+.gnd .pinlabel__leader {
+    stroke: rgb(33, 33, 33);
+}
+
+/** PULSE-WIDTH MODULATION */
+.pwm .pinlabel__body,
+.pwm .swatch__body {
+    fill: rgb(151, 76, 23);
+}
+
+.pwm .pinlabel__leader {
+    stroke: rgb(151, 76, 23);
+}
+
+/** PULSE-WIDTH MODULATION */
+.touch .pinlabel__body,
+.touch .swatch__body {
+    fill: rgb(230, 87, 10);
+}
+
+.touch .pinlabel__leader {
+    stroke: rgb(230, 87, 10);
+}
+
+/** PULSE-WIDTH MODULATION */
+.pinid .pinlabel__body,
+.pinid .swatch__body {
+    fill: #989898;
+}
+
+.pinid .pinlabel__leader {
+    stroke: #989898;
+}
+
+.pinid .pinlabel__text {
+    fill: #000;
+    font-weight: normal;
+    font-size: 11px;
+}
+
+
+/** SDRAM */
+.sdram .pinlabel__body,
+.sdram .swatch__body {
+    fill: #888;
+}
+
+.sdram .pinlabel__leader {
+    stroke: #989898;
+}
+
+.sdram .pinlabel__text {
+    fill: #fff;
+    font-weight: normal;
+    font-size: 11px;
+}
+
+
+
+
+/** PULSE-WIDTH MODULATION */
+.panel__inner {
+    fill: #fff;
+}
+
+.panel__outer {
+    fill: #333;
+}
+
+.panel--info .panel__inner {
+    fill: #e6e6e6;
+}
