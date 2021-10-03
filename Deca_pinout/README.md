@@ -13,6 +13,9 @@ Made with [Pinout](https://github.com/j0ono0/pinout). For more information on *p
 ![pinout_deca](DECA-vector-Cape-v1/pinout_deca.png)
 
 
+
+Versions below were made with older versions of Pinout and need to be adapted if used with newer versions.
+
 ## DECA-bitmap folder
 
 ![pinout_deca](DECA-bitmap/pinout_deca.png)
