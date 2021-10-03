@@ -6,6 +6,8 @@ Check folders above which contain different tutorials.
 
 * [DeMiSTify](DeMiSTify) Code to support porting MiST cores to other boards.
 
+* [Uploading cores from shell commandn line](Uploading-Cores/README.md)
+
   
 
 [See also General FPGA Resources list](./../resources.md)
