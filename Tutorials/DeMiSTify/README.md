@@ -12,7 +12,11 @@ Notes:
 
 * Where you see a specific core (e.g. like NES) substitute it for your own core.
 
-  
+
+### Controls:
+
+* F12 show/hide OSD 
+* The reset button resets the controller (so re-initialises the SD card if it's been changed, reloads any autoboot ROM.) The OSD Reset menu item resets the core itself.
 
 ### Download DeMiSTify template and Mist core
 
