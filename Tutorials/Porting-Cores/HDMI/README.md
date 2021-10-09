@@ -109,14 +109,13 @@ Note: When the original core has less than 8 bits per color then you can add zer
 
 
 
-**HDMI Audio DAC**
+**NOTES**
 
-For audio, signals i2sMck, i2sSck, i2sLr, i2sD should come from an I2S module from the original core. If the core has no I2S sound check the [Audio CODEC tutorial](./../AudioCODEC) to convert PWM audio to I2S audio.
+* For audio, signals i2sMck, i2sSck, i2sLr, i2sD should come from an I2S module from the original core. If the core has no I2S sound check the [Audio CODEC tutorial](./../AudioCODEC) to convert PWM audio to I2S audio.
 
-For video, data enable signal (HDMI_TX_DE) might not be present in your core but should be easy to adapt:
-
-* If you have the blank signal, try  `assign HDMI_TX_DE = ~blank;`  
-* You could try also the following code  (not tested yet by myself):
+* For video, data enable signal (HDMI_TX_DE) might not be present in your core but should be easy to adapt:
+  * If you have the blank signal, try  `assign HDMI_TX_DE = ~blank;`  
+  * You could try also the following code  (not tested yet by myself):
 
 ```
 assign oVGA_DE    = ((H_Cont >= (H_SYNC+H_BACK)) && (H_Cont < (H_SYNC+H_BACK+H_ACT))) && ((V_Cont >= (V_SYNC+V_BACK)) && (V_Cont < (V_SYNC+V_BACK+V_ACT))) ? 1'b1:1'b0;

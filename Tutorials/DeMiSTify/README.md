@@ -8,60 +8,60 @@ Notes:
 
 * In notes below "AMR" indicates comments from Alastair M. Robinson.
 
-* Where you see "deca" substitute it for your own board. 
+* Where you see "deca" substitute it for the board you are porting to. 
 
-* Where you see a specific core (e.g. like NES) substitute it for your own core.
+* Where you see a specific core (e.g. NES, gameboy, ....) substitute it for the core you are porting.
 
 
-### Controls:
+### Controls
 
 * F12 show/hide OSD 
 * The reset button resets the controller (so re-initialises the SD card if it's been changed, reloads any autoboot ROM.) The OSD Reset menu item resets the core itself.
 
-### Download DeMiSTify template and Mist core
+### Fork a Mist core and add DeMiSTify as a submodule
 
-* Fork a MiST core to your GitHub account from the web interface (In this example we are forking NES core https://github.com/mist-devel/gameboy)
+* Fork a MiST core to your GitHub account from the web interface (In this example we are forking NES core https://github.com/mist-devel/gameboy into https://github.com/DECAfpga/gameboy )
 
-* Clone forked project :
+* Clone forked project:
 
   ```sh
+  #https 
   git clone https://github.com/DECAfpga/gameboy
-  #ssh version: git clone git@github.com:DECAfpga/gameboy
+  #or SSH
+  git clone git@github.com:DECAfpga/gameboy
+  # go to nes folder which will be referred as the root folder
   cd nes
-  # nes will be referred as the root folder
+  
   ```
 
 * Add DeMiSTify as a submodule:
 
   ```sh
-  #submodules urls always is best to get the https version
+  #submodules urls always is best to use the https version
   git submodule add https://github.com/DECAfpga/DeMiSTify.git
   git submodule update --init 
   
-  #[optionally checkout to somhic branch]
+  #[optionally checkout to somhic or another branch]
   cd DeMiSTify
   git checkout somhic
   cd ..
   ```
 
-* Copy in the root folder the content of DeMiSTify/templates/deca-template
+* Copy in the root folder the content of DeMiSTify/templates/deca-template.  You would need to check and adapt template content from DeMiSTify/templates/  for use in other boards:
 
   ```sh
   cp -r DeMiSTify/templates/deca-template/* .
-  ```
-
-* Template already includes /sys folder for Sorgelig cores. If you don't use it you can safely remove it. In case the core is using mist_modules from Slingshot you need to add original core missing submodules.
-
-  ```sh
-  #delete if you don't use Sorgelig cores
+  #delete sys folder if you are not on a Sorgelig core
   rm -r sys/
+  #slingshot cores usually have mist_modules defined as submodules 
   ```
+
 
 ### Root project folder
 
 Modify / create the following files and folders:
 
-* Makefile: Edit Makefile and change the name of the PROJECT and the BOARDs you want to port. The rest should be fine.
+* Makefile: Edit Makefile and change the name of the PROJECT. The rest should be fine.
 
 * mistcore.qip: Edit and fill it in with the original Mist project files found in .qsf file
 
@@ -71,7 +71,7 @@ Modify / create the following files and folders:
     set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) src/dsp.v]
     ```
 
-  * Comment out the pll file, as you will include your board specific pll later into top.qip file at deca folder.
+  * Comment out the pll file, as you will include your board specific pll later into top.qip file at board folder.
 
   * You might need to comment out the original Mist sdram controller file. If you need your own memory controller include it later in top.qip file at deca folder.
 
@@ -105,13 +105,13 @@ Modify / create the following files and folders:
     ```
   
 
-### [deca] board folder
+### Board folder (deca folder)
 
 Modify and/or create the following files:
 
 * Board specific required files are now included and defined in Board/deca/deca_support.tcl
 
-* PLL: In deca folder you will need to add the pll files from the original Mist core but adapting the clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
+* PLL: In board folder you will need to add the pll files from the original Mist core but adapting the clock source from 27 MHz to 50 MHz (and optionally adapting it to the Altera family).
 
   * AMR: What I usually do is open the MiST project, and have a look at the PLL, then create a new one for the target board, with the same output frequencies, but the appropriate input frequency.  
   * AMR: the Clock27 input on the MiST core that we're wrapping - it's not 27MHz, it's whatever clock the board provides.  It'd just be too much of a pain to rename it.
@@ -141,7 +141,7 @@ Modify and/or create the following files:
 From the original Mist core it may be needed to adapt just a few things:
 
 * Mist top file
-  * To supply audio samples for I2S sound you would need to get out the DAC inputs from Mist top to the deca top. 
+  * To supply audio samples for I2S sound you would need to get out the DAC inputs from Mist top to the board top. 
   * For HDMI output you will have to output also blank signal/s and vga clock
   * If you change memory controller then you would also need to adapt the Mist top controller instantiation
 * Constraints file: remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/deca/constraints.sdc)
@@ -154,7 +154,7 @@ From the original Mist core it may be needed to adapt just a few things:
   * constraints.sdc: non timing-critical  pins would be in the "FALSE_IN" collection
     * AMR: Provided the source core is well constrained, it's not too bad, because you can use the MiST constraints file as a template.  Again, it's about replacing MiST-specific stuff with generic stuff defined by DeMiSTify. 
 * Quartus log: execute `tail -f compile.log` in ther deca folder
-* If you cloned the repo instead of a forking it, you can use the github web interface to create your own fork of the MiST repo and then you can edit .git/config in your local clone so that origin points to your fork instead of mist-devel.  Then you can push to you fork.
+* If you cloned the repo instead of forking it, you can use the github web interface to create your own fork of the MiST repo and then you can edit .git/config in your local clone so that origin points to your fork instead of mist-devel.  Then you can push to you fork.
 
 ### Compile the project
 
@@ -165,14 +165,15 @@ make
 #Create file site.mk in DeMiSTify folder 
 cd DeMiSTify
 cp site.template site.mk
-#Edit site.mk and add your own PATHs to Quartus 
+#Edit site.mk and modify with your PATHs to Quartus and the BOARDS you are porting to
 #(e.g. Q19 = /home/jordi/bin/intelFPGA_lite/17.1/quartus/bin)
 gedit site.mk
-#[checkout to somhic branch if you did it in the first part]
+#[optionally checkout to somhic or other branch if you did it in the first part]
 git checkout somhic
-#Go back to root folder and do a make with board target (deca, neptuno, uareloaded).  If not specified it will compile for all targets. 
+#Go back to root folder and do a make with board target (deca, neptuno, uareloaded, ...).  If not specified it will compile for all targets. 
 cd ..
 make BOARD=deca
+#make BOARDS=deca\ neptuno
 ```
 
 * `make` will do make init, followed by make compile for all boards defined in the makefile.
@@ -196,8 +197,12 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 ```
 
+
+
 ### Troubleshooting
 
+* If you make changes to firmware and it does not work, just delete everything in root/firmware folder except for "config.h" and "overrides.c".
+* If you make changes to demistify board options/pins/... and it does not work, just delete the board qsf file.
 * Problems loading initial ROM file:    You may have to override a function in firmware/overrides.c to make sure the io index is correct, adding the line    `const char *bootrom_name="SVI328  ROM";`  to firmware/overrides.c  ( note the filename must be in 8/3 format with no dot).
 
 
