@@ -40,7 +40,7 @@ The original code comes from "adc_mic" example from [Terasic's Max10 plus board 
 * [AUDIO_SPI_CTL_RD.v](../rtl_deca/audio/AUDIO_SPI_CTL_RD.v) sends configuration registers and its data to the AIC3254
 * [SPI_RAM.v](../rtl_deca/audio/SPI_RAM.v) loads configuration file "LOOP.hex" to RAM
 * [LOOP.hex](../rtl_deca/audio/LOOP.hex) contains all the register number and data associated for configuring the Audio CODEC. This one uses I2S serial data bus routed to the line out connector (LOL/R). See Register configurations for other examples.
-*  [i2s_transmitter.vhd](../rtl_deca/audio/i2s_transmitter.vhd) is a module to transform audio samples to serialized I2S output.
+*  [audio_i2s.vhd](../rtl_deca/audio/audio_i2s.vhd) is a module to transform audio samples to serialized I2S output.
 
 **Modify QSF file**
 
@@ -49,7 +49,7 @@ The original code comes from "adc_mic" example from [Terasic's Max10 plus board 
 ```
 set_global_assignment -name VERILOG_FILE rtl_deca/audio/AUDIO_SPI_CTL_RD.v
 set_global_assignment -name VERILOG_FILE rtl_deca/audio/SPI_RAM.v
-set_global_assignment -name VHDL_FILE rtl_deca/audio/i2s_transmitter.vhd
+set_global_assignment -name VHDL_FILE rtl_deca/audio/audio_i2s.vhd
 ```
 
 * Replace the I2S Pins from the original core with the DECA ones:
@@ -72,19 +72,19 @@ Add missing ports to top module (you should already have the I2S (+ ear if avail
 
 ```verilog
 	// Audio DAC DECA
-	inout wire 	AUDIO_GPIO_MFP5,
-	input wire 	AUDIO_MISO_MFP4,
-	inout wire 	AUDIO_RESET_n,
+	inout wire AUDIO_GPIO_MFP5,
+	input wire AUDIO_MISO_MFP4,
+	inout wire AUDIO_RESET_n,
 	output wire AUDIO_SCLK_MFP3,
 	output wire AUDIO_SCL_SS_n,
-	inout wire 	AUDIO_SDA_MOSI,
+	inout wire AUDIO_SDA_MOSI,
 	output wire AUDIO_SPI_SELECT,
 ```
 
 In the module code add and adapt this code with your own "reset" signal and a 50 MHz clock (it might work with other frequencies as well):
 
 ```verilog
-//--RESET DELAY ---  
+    //--RESET DELAY ---  
 	// In example code above there is a complete delay code but haven't seen benefit on using it yet
 	wire   RESET_DELAY_n;
 	assign RESET_DELAY_n = ~reset;
@@ -128,7 +128,7 @@ i2s I2S
 
 If your original core does not have I2S output but just PWM audio, you will have to look at the sound module of the core and get the sample data and adapt it to a 16 bit signal.  
 
-Follows an instantiatiation to the [i2s_transmitter.vhd](../rtl_deca/audio/i2s_transmitter.vhd) module privided, assuming the sample audio is already 16 bit long:
+Follows an instantiatiation to the [i2s_transmitter.vhd](../rtl_deca/audio/i2s_transmitter.vhd) module provided, assuming the sample audio is already 16 bit long:
 
 ```
 // I2S interface audio
@@ -189,3 +189,20 @@ end process;
 
 ```
 
+**Note regarding audio data with less than 16 bit**
+
+It is better to add just trailing zeros, e.g. if audio is 11 bits  then feed sample_data with  audio & "00000".
+
+See also following point.
+
+**Note regarding signed/unsigned sound**
+
+Sometimes the original audio sample is signed and sometimes unsigned.
+
+Data feed to I2S generally is always signed.
+
+Sometimes just inverting the MSB just works. 
+
+Moving one bit to the right it also works but you would loose dinamic range of the sound so it's not a good solution.   
+
+The problem arises when moving audio data from module to module, it could change it's original format if not treated carefully. e.g. in VHDL you could define input ports as signed or std_logic_vector and when you do not assign the same type of the original sample then you are converting the audio and you would hear lot of distortion at the speakers.

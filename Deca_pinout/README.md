@@ -6,8 +6,8 @@ Made with [Pinout](https://github.com/j0ono0/pinout). For more information on *p
 
 
 
-## DECA-vector-Cores-v1 folder
-![pinout_deca](DECA-vector-Cores-v1/pinout_deca.png)
+## DECA-vector-Cores-v1.1 folder
+![pinout_deca](DECA-vector-Cores-v1.1/pinout_deca.png)
 
 ## DECA-vector-Cape-v1 folder
 ![pinout_deca](DECA-vector-Cape-v1/pinout_deca.png)
