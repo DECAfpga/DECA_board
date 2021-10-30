@@ -6,14 +6,16 @@
 
 ### Binaries for testing
 
-* [memtest_deca_3pins_211020](https://github.com/DECAfpga/DECA_binaries/blob/main/Others/Memtest/old/memtest_deca_3pins_211020.sof)
+* [memtest_deca_3pins_211020.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Others/Memtest/old/memtest_deca_3pins_211020.sof)
 * [nes_deca_3pins_sdram-mist_211029.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Consoles/NES_demistify/nes_deca_3pins_sdram-mist_211029.sof)
 * [nes_deca_3pins_sdram-amr1_211029.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Consoles/NES_demistify/nes_deca_3pins_sdram-amr1_211029.sof)
 * [nes_deca_3pins_sdram-amr2_211030.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Consoles/NES_demistify/nes_deca_3pins_sdram-amr2_211030.sof)
 
 
 
-### Modules tested
+### Modules tested 
+
+Tested with memtest_deca_3pins_211020.sof:
 
 * "A2" dual memory:  
 
@@ -38,7 +40,9 @@
     * T3) Manual mode 120 MHz:   15  minutes at 120 MHz (66 min @120MHz with 1 error)
     * T4) Manual mode 120 MHz:   14:02       22   minutes at 120 MHz 
 
-
+* XS 2.2 Mister module 32 MB
+  * Start in auto mode and frecuency falls to 160 MHz.
+  * many tests made and is always stable at 160 MHz
 
 ### 3 pins connections 
 
@@ -56,6 +60,8 @@ SDRAM testing with 3 Mister Modules:
 * dual memory module O1, 3 pins,  120 MHz memtest
 
 * module xs 2.2, does not have DQM pins exposed and has a stable 160 MHz memtest
+
+
 
 Note: slash / separates different tests
 
