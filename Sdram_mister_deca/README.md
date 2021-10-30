@@ -19,7 +19,7 @@ See full schematic [sdram_xs-SchDoc.pdf](sdram_xs-SchDoc.pdf)
 
 See Kicad folder.
 
-![image-20210420203647994](schematic.png)
+![image-20210420203647994](img/schematic.png)
 
 
 
@@ -32,11 +32,11 @@ See Kicad folder.
 * Plug SDRAM module into the stackable header and this into the P8 DECA connector.
 * Connect jumper wires at external soldered pins in 12, 29 & 30 according to schematic. It is important to connect at least one of the ground pins (I suggest pin 12) from SDRAM module to GND in P8 pins (1, 2).  Pin 29 (3V3) and pin 30 (GND) from SDRAM can be connected to P9 connector pins 3 (3V3) and 1 (GND).
 
-### ![stackable-headers](stackable-headers.jpg)
+### ![stackable-headers](img/stackable-headers.jpg)
 
-![outward](outward.jpg)
+![outward](img/outward.jpg)
 
-![inward](inward.jpg)
+![inward](img/inward.jpg)
 
 
 
@@ -62,4 +62,4 @@ mem_speed 0x40000000 0x2000000
 
 
 
-![image-20210420212040405](litex.png)
+![image-20210420212040405](img/litex.png)

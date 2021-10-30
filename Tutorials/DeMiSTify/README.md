@@ -166,6 +166,7 @@ make
 cd DeMiSTify
 cp site.template site.mk
 #Edit site.mk and modify with your PATHs to Quartus and the BOARDS you are porting to
+#(chameleon64 chameleon64v2 de10lite deca neptuno sidi uareloaded mist ...)
 #(e.g. Q19 = /home/jordi/bin/intelFPGA_lite/17.1/quartus/bin)
 gedit site.mk
 #[optionally checkout to somhic or other branch if you did it in the first part]
