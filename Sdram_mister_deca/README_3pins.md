@@ -7,13 +7,20 @@
 ### Binaries for testing
 
 * [memtest_deca_3pins_211020.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Others/Memtest/old/memtest_deca_3pins_211020.sof)
+
 * [nes_deca_3pins_sdram-mist_211029.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Consoles/NES_demistify/nes_deca_3pins_sdram-mist_211029.sof)
+
 * [nes_deca_3pins_sdram-amr1_211029.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Consoles/NES_demistify/nes_deca_3pins_sdram-amr1_211029.sof)
+
 * [nes_deca_3pins_sdram-amr2_211030.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Consoles/NES_demistify/nes_deca_3pins_sdram-amr2_211030.sof)
 
+* [SDRAMStressTest_deca_0_XS.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Others/SDRAMStressTest/SDRAMStressTest_deca_0_XS.sof)
 
+* [SDRAMStressTest_deca_1_3pins.sof](https://github.com/DECAfpga/DECA_binaries/blob/main/Others/SDRAMStressTest/SDRAMStressTest_deca_1_3pins.sof)
 
-### Modules tested 
+  
+
+### Modules tested with memtest
 
 Tested with memtest_deca_3pins_211020.sof:
 
@@ -43,6 +50,37 @@ Tested with memtest_deca_3pins_211020.sof:
 * XS 2.2 Mister module 32 MB
   * Start in auto mode and frecuency falls to 160 MHz.
   * many tests made and is always stable at 160 MHz
+
+
+
+### Modules tested with SDRAMStressTest 
+
+Tested with SDRAMStressTest_deca_1_3pins.sof:
+
+* "A2" dual memory (140 MHz memtest)  
+
+  *  10 min test: lots and lots of errors
+    * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
+
+  *  10 min test: p0: 0, p1: 0, p2: **33**, p3:  **25**, p4:  **1** errors
+    * Parameters: CL3, riskcontention 1
+
+  * 10 min test: p0: 0, p1: 0, p2: **13**, p3: **4**, p4: 0  errors
+    * Parameters: CL3, riskcontention 0
+
+* "O1" dual memory (120 MHz memtest)  
+
+  * 
+
+Tested with SDRAMStressTest_deca_0_XS.sof:
+
+* XS 2.2 Mister module 32 MB  (160 MHz memtest)  
+
+  * 10 min test: p0: 0, p1: 0, p2: **10**, p3: **16**, p4: 0 errors
+
+    * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
+
+      
 
 ### 3 pins connections 
 
