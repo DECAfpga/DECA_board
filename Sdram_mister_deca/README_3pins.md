@@ -20,6 +20,12 @@
 
   
 
+### Pictures of 3 pins Mister modules
+
+![outward](img2/outward.jpg)
+
+![inward](img2/inward.jpg)
+
 ### Modules tested with memtest
 
 Tested with memtest_deca_3pins_211020.sof:

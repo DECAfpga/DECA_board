@@ -1,7 +1,5 @@
 ## SDRAM Mister module adapter for DECA
 
-For memory testings and 3 pins old mister modules pictures see [this readme.](README_3pins.md)
-
 ### Objectives and considerations
 
 * Build an adapter to plug a 40 pin Mister SDRAM on DECA board
@@ -29,17 +27,16 @@ See Kicad folder.
 
 * Buy an stackable male male header like the ones sold in this [pack](https://www.arrow.com/en/products/205-0001-02/schmartboard).
 
-* Push a little bit down and bend pins in the stackable header that correspond to pins 12, 29, 30 from the SDRAM module (pins 18, 35, 36 from the Deca P8 header). Otherways you can remove those pins an insert larger ones.
+* Cut pins in the stackable header that correspond to pins 12, 29, 30 from the SDRAM module. 
+* Solder external pins to the SDRAM module in pins 12, 29 & 30.
 * Plug SDRAM module into the stackable header and this into the P8 DECA connector.
-* Connect jumper wires at those bended pins in 12, 29 & 30 according to schematic. It is important to connect at least one of the ground pins (I suggest pin 12) from SDRAM module to GND in P8 pins 1 or 2, but better if you connect both ground pins.   Pin 29 (3V3) and pin 30 (GND) from SDRAM can be connected to P9 connector pins 3 (3V3) and 1 (GND).
+* Connect jumper wires at external soldered pins in 12, 29 & 30 according to schematic. It is important to connect at least one of the ground pins (I suggest pin 12) from SDRAM module to GND in P8 pins (1, 2).  Pin 29 (3V3) and pin 30 (GND) from SDRAM can be connected to P9 connector pins 3 (3V3) and 1 (GND).
 
-See below pictures which are self explanatory:
+### ![stackable-headers](img/stackable-headers.jpg)
 
-![header](img1/stackable-headers.jpg)
+![outward](img/outward.jpg)
 
-![outward](img1/outward.png)
-
-![total](img1/total.png)
+![inward](img/inward.jpg)
 
 
 

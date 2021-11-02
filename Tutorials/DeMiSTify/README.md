@@ -20,7 +20,7 @@ Notes:
 
 ### Fork a Mist core and add DeMiSTify as a submodule
 
-* Fork a MiST core to your GitHub account from the web interface (In this example we are forking NES core https://github.com/mist-devel/gameboy into https://github.com/DECAfpga/gameboy )
+* Fork a MiST core to your GitHub account from the web interface (In this example we are forking gameboy core https://github.com/mist-devel/gameboy into https://github.com/DECAfpga/gameboy )
 
 * Clone forked project:
 
@@ -29,8 +29,8 @@ Notes:
   git clone https://github.com/DECAfpga/gameboy
   #or SSH
   git clone git@github.com:DECAfpga/gameboy
-  # go to nes folder which will be referred as the root folder
-  cd nes
+  # go to gameboy folder which will be referred as the root folder
+  cd gameboy
   
   ```
 
@@ -97,13 +97,20 @@ Modify / create the following files and folders:
     * If you have the menu working on F12, but no joystick emulation, then make sure you have both CONFIG_JOYKEYS and CONFIG_EXTJOYSTICK defined.
     * AMR: If you edit config.h  you'll need to do a "make firmware clean" followed by "make firmware" - in the near future I'll push some changes to DeMiSTify to make the firmware get rebuilt when you modify config.h
     
-  * Create inside a file named "overrides.c". Edit file and add the following if the core needs to boot a ROM during bootup:
+  * Create inside a file named "overrides.c". 
   
-    ```
-    /* Initial ROM for NES core*/
+    * Edit file and add the following if the core needs to boot a ROM during bootup:
+    
+    ```c
+    // Initial ROM 
     const char *bootrom_name="AUTOBOOTNES";
+    //Note the filename must be in 8/3 format with no dot and capital letters. If the name have less than 8 letters then leave spaces so total characters must be 11, e.g.
+    const char *bootrom_name="SVI328  ROM";
     ```
-  
+    
+    * If the core needs to load a VHD drive during bootup checkout the following code ([overrides.c](overrides.c)).
+    
+      
 
 ### Board folder (deca folder)
 
@@ -126,15 +133,38 @@ Modify and/or create the following files:
     set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sdram.v]
     ```
 
-  * AMR: I normally have a root .qip which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too.
+  * AMR: I normally have a root qip file which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too.
 
-* .hex files:  if the Mist project include .hex files, copy them to board folder as it's the place where they can be found
+* .hex files:  if the Mist project include .hex files, copy them to board folder as it's the place where they can be found  [to be verified]
 
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * Edit it and change the guest module name.
+  
   * If the audio's super-loud and scratchy then you probably have a problem with signed vs. unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
+  
   * AMR: deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!).
+  
+  * If you need to extract 16 bit audio from the MiST core to feed an I2S transmitter it's a good idea to make use of this Verilog macro defined in DeMiSTify/Boards/deca/board_support.tcl
+  
+    ```tcl
+    set_global_assignment -name VERILOG_MACRO  "DEMISTIFY_PARALLEL_AUDIO=1"
+    ```
+  
+    Definitions in top mist core. The idea is to add the extra signals without breaking the core on MiST:
+  
+    ```tcl
+    `ifdef DEMISTIFY_PARALLEL_AUDIO
+    `else
+    `endif
+    ```
+  
+    AMR: Remember that on MiST that top file is the actual toplevel, so its signals are all physical pins on the FPGA.  If they're not defined, Quartus will attempt to allocate unused pins to them, and fail because there aren't 32 spare pins.
+  
+  * Generic map for substitute_mcu entity: SPI_FASTBIT 
+  
+    AMR: If the control module is driving SPI too fast for the guest core it will cause problems.  (e.g. the NES core uses a sysclk of just 21MHz for the data-IO module.)  In the generic map for substitute_mcu in your deca_top, add this:   `SPI_FASTBIT=>3,`  
+    It defaults to 2, so changing it to 3 halves the speed of the fast-mode SPI comms.
 
 ### Changes in Mist core
 
@@ -204,17 +234,16 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 * If you make changes to firmware and it does not work, just delete everything in root/firmware folder except for "config.h" and "overrides.c".
 * If you make changes to demistify board options/pins/... and it does not work, just delete the board qsf file.
-* Problems loading initial ROM file:    You may have to override a function in firmware/overrides.c to make sure the io index is correct, adding the line    `const char *bootrom_name="SVI328  ROM";`  to firmware/overrides.c  ( note the filename must be in 8/3 format with no dot).
 
-
+  
 
 ### Notes about Constraint files
 
-* It's ok to have two constraint files in the core, one project specific and one board specific
-  * AMR: the board-specific one does things like "set RAM_OUT {DRAM_DQ* DRAM_ADDR* DRAM_BA* DRAM_RAS_N DRAM_CAS_N DRAM_WEN DRAM*DQM DRAM_CS_N DRAM_CKE}".  The SPI clock is defined in the board constraints too.
-  * AMR: the project one does things like "set_output_delay -clock [get_clocks $sdram_clk] -reference_pin [get_ports ${RAM_CLK}] -max 1.5 [get_ports ${RAM_OUT}]"
-  * AMR: It avoids having to write the whole constraints file for every board, every time you port a core.
-  * AMR: What's nice is that variables defined in one .sdc file are visible from within subsequent .sdc files.
+* AMR: It's ok to have two constraint files in the core, one project specific and one board specific
+  * The board-specific one does things like "set RAM_OUT {DRAM_DQ* DRAM_ADDR* DRAM_BA* DRAM_RAS_N DRAM_CAS_N DRAM_WEN DRAM*DQM DRAM_CS_N DRAM_CKE}".  The SPI clock is defined in the board constraints too.
+  * The project one does things like "set_output_delay -clock [get_clocks $sdram_clk] -reference_pin [get_ports ${RAM_CLK}] -max 1.5 [get_ports ${RAM_OUT}]"
+  * It avoids having to write the whole constraints file for every board, every time you port a core.
+  * What's nice is that variables defined in one .sdc file are visible from within subsequent .sdc files.
   
 * The constraints file will need adapting.  Each board has its own constraints files which define things like the pin names for the RAM, which pins can be treated as false paths, etc.  That way a single project constraints file can be shared between targets.
 
