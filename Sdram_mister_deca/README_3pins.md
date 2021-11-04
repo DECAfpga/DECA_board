@@ -30,10 +30,9 @@
 
 Tested with memtest_deca_3pins_211020.sof:
 
-* "A2" dual memory:  
+* "A2" dual memory: 
 
   * Start in auto mode and frecuency falls to 140 MHz.
-
   * Stable phase
 
     * T1) 55 minutes at 140 MHz.  Then falls to 100 MHz.  Test ended
@@ -42,9 +41,10 @@ Tested with memtest_deca_3pins_211020.sof:
     * T4) In auto falls to 80 MHz.  Test ended
     * T5) 5 minutes at 140 MHz.  Test ended
     * T6) 25 minutes at 140 MHz.  Test ended
-
-    
-
+  * Result: 140 MHz 
+  * Notes: 
+    * This model has all the condensers doubled
+    * CKE, DQMH/L pins have been connected with 23 cm duponts
 * "O1" dual memory:  
   * Start in auto mode and frecuency falls to 120 MHz.
   * Stable phase
@@ -52,7 +52,17 @@ Tested with memtest_deca_3pins_211020.sof:
     * T2) 8 minutes at 120 MHz. Falls to 110 MHz. Test ended.
     * T3) Manual mode 120 MHz:   15  minutes at 120 MHz (66 min @120MHz with 1 error)
     * T4) Manual mode 120 MHz:   14:02       22   minutes at 120 MHz 
-
+  * Result: 120 MHz 
+  * Notes: 
+    * CKE, DQMH/L pins have been connected with 23 cm duponts
+* "O3" dual memory (tested by Rhoderik):
+  * Start in auto mode and frecuency falls to 130 MHz.
+  * Stable phase
+    * Some tests show that after some minutes falls to 120 MHz
+    * Test 22 min at 120 MHz
+  * Result: 120 MHz 
+  * Notes: 
+    * CKE, DQMH/L pins have been connected with long duponts
 * XS 2.2 Mister module 32 MB
   * Start in auto mode and frecuency falls to 160 MHz.
   * many tests made and is always stable at 160 MHz
@@ -60,6 +70,17 @@ Tested with memtest_deca_3pins_211020.sof:
 
 
 ### Modules tested with SDRAMStressTest 
+
+To show numeric results you should execute this script meanwhile the core is running:
+
+```sh
+git clone https://github.com/DECAfpga/SDRAMStressTest
+cd SDRAMStressTest
+git  submodule update --init --recursive 
+/path/a/quartus/bin/quartus_stp -t jtagbridge.tcl
+```
+
+
 
 Tested with SDRAMStressTest_deca_1_3pins.sof:
 
