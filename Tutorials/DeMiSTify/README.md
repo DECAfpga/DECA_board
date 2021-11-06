@@ -245,7 +245,9 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
   * It avoids having to write the whole constraints file for every board, every time you port a core.
   * What's nice is that variables defined in one .sdc file are visible from within subsequent .sdc files.
   
-* The constraints file will need adapting.  Each board has its own constraints files which define things like the pin names for the RAM, which pins can be treated as false paths, etc.  That way a single project constraints file can be shared between targets.
+* The board constraints file will need adapting.  Each board has its own constraints files which define things like the pin names for the RAM, which pins can be treated as false paths, etc.  That way a single project constraints file can be shared between targets.
+
+* The original Mist constraints file will need adapting.  Usually it's just a case of removing the MiST names for signals and replacing them with the variables defined in the board-specific constraints files.
 
 * set topmodule guest| 
 
@@ -264,6 +266,10 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
     
 
 
+
+### Other material
+
+* [VIC20 part 2](https://www.youtube.com/watch?v=xhDtlOlDnLY)
 
 
 

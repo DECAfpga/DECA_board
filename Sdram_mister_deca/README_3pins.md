@@ -80,34 +80,37 @@ git  submodule update --init --recursive
 /path/a/quartus/bin/quartus_stp -t jtagbridge.tcl
 ```
 
-
+NOTE: Between different test is better to power cycle the board.
 
 Tested with SDRAMStressTest_deca_1_3pins.sof:
 
 * "A2" dual memory (140 MHz memtest)  
 
-  *  10 min test: lots and lots of errors
-    * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
-
-  *  10 min test: p0: 0, p1: 0, p2: **33**, p3:  **25**, p4:  **1** errors
-    * Parameters: CL3, riskcontention 1
-
-  * 10 min test: p0: 0, p1: 0, p2: **13**, p3: **4**, p4: 0  errors
-    * Parameters: CL3, riskcontention 0
-
+  *  Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
+    *  10 min test: lots and lots of errors
+  *  Parameters: CL3, riskcontention 1
+    *  10 min test: p0: 0, p1: 0, p2: **33**, p3:  **25**, p4:  **1** errors
+  *  Parameters: CL3, riskcontention 0
+    *  10 min test: p0: 0, p1: 0, p2: **13**, p3: **4**, p4: 0  errors
+    *  10 min test: p0: 0, p1: 0, p2: **5**, p3: **2**, p4: 0  errors (6/11/21)
+    *  10 min test: p0: 0, p1: 0, p2: **8**, p3: **1**, p4: 0  errors (6/11/21)
 * "O1" dual memory (120 MHz memtest)  
 
-  * 
+  * Parameters: CL3, riskcontention 0
+    * 28 min test: p0: **0**, p1: **0**, p2: **0**, p3:  **0**, p4:  **0** errors (6/11/21)
+    * 12 min test: p0: **0**, p1: **0**, p2: **0**, p3:  **0**, p4:  **0** errors (6/11/21)
 
 Tested with SDRAMStressTest_deca_0_XS.sof:
 
 * XS 2.2 Mister module 32 MB  (160 MHz memtest)  
 
-  * 10 min test: p0: 0, p1: 0, p2: **10**, p3: **16**, p4: 0 errors
+  * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
 
-    * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
+    * 10 min test: p0: 0, p1: 0, p2: **10**, p3: **16**, p4: 0 errors
 
       
+    
+    
 
 ### 3 pins connections 
 
