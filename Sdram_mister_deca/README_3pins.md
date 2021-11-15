@@ -120,7 +120,7 @@ Tested with SDRAMStressTest_deca_0_XS.sof:
 
 
 
-### NES core tests
+### NES demisitied core tests
 
 SDRAM testing with 3 Mister Modules:
 
