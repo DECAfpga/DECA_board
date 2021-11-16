@@ -55,7 +55,8 @@ Notes:
   rm -r sys/
   #slingshot cores usually have mist_modules defined as submodules 
   ```
-
+  
+  NOTE: Most up to date templates are at DeMiSTify/templates main folder. It's worth keeping up to date with config.h (and demistify_config_pkg if your board toplevels are in VHDL) but don't worry too much about the other files (most of those changes are about tidiness rather than functionality).
 
 ### Root project folder
 
@@ -90,11 +91,14 @@ Modify / create the following files and folders:
 
 * demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
 
+  * It contains COMPONENT guest_mist.  Is not enough to define it once in board_top ? AMR: The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync.
+
 * firmware
 
   * config.h (from DeMiSTify/templates/config.h): edit and change definitions accordingly to your core:
     * set to #undef if your core does not use those options
     * If you have the menu working on F12, but no joystick emulation, then make sure you have both CONFIG_JOYKEYS and CONFIG_EXTJOYSTICK defined.
+    *  there's a define in firmware/config.h which chooses whether or not a ROM is required (#undef ROM_REQUIRED)
     * AMR: If you edit config.h  you'll need to do a "make firmware clean" followed by "make firmware" - in the near future I'll push some changes to DeMiSTify to make the firmware get rebuilt when you modify config.h
     
   * Create inside a file named "overrides.c". 
@@ -107,6 +111,8 @@ Modify / create the following files and folders:
     //Note the filename must be in 8/3 format with no dot and capital letters. If the name have less than 8 letters then leave spaces so total characters must be 11, e.g.
     const char *bootrom_name="SVI328  ROM";
     ```
+    
+    NOTE: this is not needed if the ROM is defined in config.h
     
     * If the core needs to load a VHD drive during bootup checkout the following code ([overrides.c](overrides.c)).
     
