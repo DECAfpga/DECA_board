@@ -41,7 +41,7 @@ Notes:
   git submodule add https://github.com/DECAfpga/DeMiSTify.git
   git submodule update --init 
   
-  #[optionally checkout to somhic or another branch]
+  #[recommended checkout to somhic branch for latest Deca features]
   cd DeMiSTify
   git checkout somhic
   cd ..
@@ -52,8 +52,8 @@ Notes:
   ```sh
   cp -r DeMiSTify/templates/deca-template/* .
   #delete sys folder if you are not on a Sorgelig core
-  rm -r sys/
   #slingshot cores usually have mist_modules defined as submodules 
+  rm -r sys/
   ```
   
   NOTE: Most up to date templates are at DeMiSTify/templates main folder. It's worth keeping up to date with config.h (and demistify_config_pkg if your board toplevels are in VHDL) but don't worry too much about the other files (most of those changes are about tidiness rather than functionality).
@@ -80,26 +80,26 @@ Modify / create the following files and folders:
 
 * project_files.rtl is a bit like a .qip file but not quartus-specific. 
 
-  * remove included .qip files in template for your own ones (usually just a mistcore.qip file in the root folder
+  * remove included .qip files in template for your own ones (usually just a mistcore.qip file in the root folder)
   * If pre-flow scripts like build_id.tcl is not used in core remove it
 
     * AMR: It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time. Most of them generate a version string which is included in the config string.  
 
 * project_defs.tcl  edit and check parameters project, requires_sdram, optimizeforspeed
 
-  * set optimizeforspeed 0  to avoid  OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE" which takes long time to generate output bitstream.
+  * comment out 'set optimizeforspeed 1'  to avoid  OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE" which takes long time to generate output bitstream.
 
 * demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
 
-  * It contains COMPONENT guest_mist.  Is not enough to define it once in board_top ? AMR: The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync.
+  * It contains COMPONENT guest_mist.  AMR: The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync.
 
 * firmware
 
   * config.h (from DeMiSTify/templates/config.h): edit and change definitions accordingly to your core:
     * set to #undef if your core does not use those options
     * If you have the menu working on F12, but no joystick emulation, then make sure you have both CONFIG_JOYKEYS and CONFIG_EXTJOYSTICK defined.
-    *  there's a define in firmware/config.h which chooses whether or not a ROM is required (#undef ROM_REQUIRED)
-    * AMR: If you edit config.h  you'll need to do a "make firmware clean" followed by "make firmware" - in the near future I'll push some changes to DeMiSTify to make the firmware get rebuilt when you modify config.h
+    *  There's a define in firmware/config.h which chooses whether or not a ROM is required (#undef ROM_REQUIRED)
+    * AMR: If you edit config.h  you'll need to do a "make firmware_clean" followed by "make firmware". In the near future I'll push some changes to DeMiSTify to make the firmware get rebuilt when you modify config.h
     
   * Create inside a file named "overrides.c". 
   
@@ -112,7 +112,7 @@ Modify / create the following files and folders:
     const char *bootrom_name="SVI328  ROM";
     ```
     
-    NOTE: this is not needed if the ROM is defined in config.h
+    NOTE: Now this is not needed as the ROM name can be set in config.h, but the override method does still work.
     
     * If the core needs to load a VHD drive during bootup checkout the following code ([overrides.c](overrides.c)).
     
@@ -129,7 +129,7 @@ Modify and/or create the following files:
   * AMR: What I usually do is open the MiST project, and have a look at the PLL, then create a new one for the target board, with the same output frequencies, but the appropriate input frequency.  
   * AMR: the Clock27 input on the MiST core that we're wrapping - it's not 27MHz, it's whatever clock the board provides.  It'd just be too much of a pain to rename it.
 
-* Memory controllers: add specific memory controllers for your board
+* Memory controllers: add specific memory controllers for your board if needed
 
 * top.qip: Create a new file named "top.qip" and include board project specific files like deca_top.vhd,  PLLs and specific memory controllers. 
 
@@ -141,13 +141,13 @@ Modify and/or create the following files:
 
   * AMR: I normally have a root qip file which has all the project files and the project constraints file.  Then in each board directory I have top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too.
 
-* .hex files:  if the Mist project include .hex files, copy them to board folder as it's the place where they can be found  [to be verified]
+* ~~.hex files:  if the Mist project include .hex files, copy them to board folder as it's the place where they can be found~~  
 
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * Edit it and change the guest module name.
   
-  * If the audio's super-loud and scratchy then you probably have a problem with signed vs. unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
+  * If the audio's super-loud and scratchy then you probably have a problem with signed vs unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
   
   * AMR: deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!).
   
@@ -180,15 +180,18 @@ From the original Mist core it may be needed to adapt just a few things:
   * To supply audio samples for I2S sound you would need to get out the DAC inputs from Mist top to the board top. 
   * For HDMI output you will have to output also blank signal/s and vga clock
   * If you change memory controller then you would also need to adapt the Mist top controller instantiation
-* Constraints file: remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/deca/constraints.sdc)
-  * AMR: It'll need adapting - usually it's just a case of removing the MiST names for signals and replacing them with the variables defined in the board-specific constraints files.
+* Constraints file: copy the MiST constraints file to the root folder and remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/deca/constraints.sdc)
+
+  See below "Notes about Constraint files".
 
 ### Others
 
 * If needed to adapt anything, adjustments to board definition can be found inside the DeMiSTify/Board/xxxx folder
-  * deca_pins.tcl: PIN names can be whatever's appropriate for the board.  The job of the board-specific toplevel file is to wire up the board signals to the guest core's signals.
-  * constraints.sdc: non timing-critical  pins would be in the "FALSE_IN" collection
+  * constraints.sdc: non timing-critical  pins would be in the "FALSE_IN/OUT" collections
     * AMR: Provided the source core is well constrained, it's not too bad, because you can use the MiST constraints file as a template.  Again, it's about replacing MiST-specific stuff with generic stuff defined by DeMiSTify. 
+  * deca_pins.tcl: PIN names can be whatever's appropriate for the board.  The job of the board-specific toplevel file is to wire up the board signals to the guest core's signals.
+  * deca_support.tcl: include specific board HDL files here (hmdi, audio, ...).
+  * deca_opts.tcl: include specific board global assignments here.
 * Quartus log: execute `tail -f compile.log` in ther deca folder
 * If you cloned the repo instead of forking it, you can use the github web interface to create your own fork of the MiST repo and then you can edit .git/config in your local clone so that origin points to your fork instead of mist-devel.  Then you can push to you fork.
 
@@ -213,11 +216,13 @@ make BOARD=deca
 #make BOARDS=deca\ neptuno
 ```
 
-* `make` will do make init, followed by make compile for all boards defined in the makefile.
+* `make` will do `make init`, followed by `make compile` for all boards defined in the makefile.
 
 * makefile recognizes commands "init" "compile" "firmware" and "firmware_clean". If you don't supply a command it does everything.
 
-* `make BOARD=deca` will create the project files and then compile them.  If you want to just create the project so you can open it in Quartus, then use `make BOARD=deca init`
+* `make BOARD=deca` will create the project files and then compile them.  
+
+* `make BOARD=deca init` It just created the project so you can open it in Quartus and compile there
 
 * When you do `make BOARD=deca` the scripts will generate a new quartus project file in deca/ pulling together the files in project_files.rtl, the stuff in DeMistify/Boards/deca and the deca/top.qip file. When if finishes you will have the ported core inside the deca folder. Generated bitstream will be at deca/output_files.
 
@@ -238,10 +243,11 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 ### Troubleshooting
 
-* If you make changes to firmware and it does not work, just delete everything in root/firmware folder except for "config.h" and "overrides.c".
-* If you make changes to demistify board options/pins/... and it does not work, just delete the board qsf file.
+* If you make changes to firmware and do a make it will not work. You need to do a `make firmware_clean`  or just delete everything in root/firmware folder except for "config.h" and "overrides.c" files.
+* If you make changes to demistify board options/pins/... and it does not work compilation, then just delete the board qsf file.
 
-  
+
+
 
 ### Notes about Constraint files
 
@@ -263,7 +269,7 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
     set mem_clk   "${topmodule}clock_21mhz|altpll_component|auto_generated|pll1|clk[0]"
     ```
 
-    Then I can use the same constraints file with MiST, just by having a MiST-specific constraints file set topmodule to ""
+    Then I can use the same constraints file with MiST, just by having a MiST-specific constraints file set topmodule guest| on DeMiSTified platforms, and set topmodule "" on MiST
 
     The path to the PLL is then evaluated as guest|clock_21mhz|altpll_component.... on DeMiSTified platforms, and clock_21mhz|altpll_component.... on MiST, using the same constraints file.
 
@@ -275,7 +281,7 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 ### Other material
 
-* [VIC20 part 2](https://www.youtube.com/watch?v=xhDtlOlDnLY)
+* Porting the VIC20 core https://retroramblings.net/?p=1752
 
 
 
