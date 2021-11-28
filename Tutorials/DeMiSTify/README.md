@@ -50,7 +50,8 @@ Notes:
 * Copy in the root folder the content of DeMiSTify/templates/deca-template.  You would need to check and adapt template content from DeMiSTify/templates/  for use in other boards:
 
   ```sh
-  cp -r DeMiSTify/templates/deca-template/* .
+  cp -r DeMiSTify/templates/deca/ .
+  cp -r DeMiSTify/templates/deca_atlas_root/* .
   ```
   
   NOTE: Most up to date templates are at DeMiSTify/templates main folder. It's worth keeping up to date with config.h (and demistify_config_pkg if your board toplevels are in VHDL) but don't worry too much about the other files (most of those changes are about tidiness rather than functionality).
