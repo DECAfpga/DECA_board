@@ -51,6 +51,9 @@ Notes:
 
   ```sh
   cp -r DeMiSTify/templates/deca-template/* .
+  #delete sys folder if you are not on a Sorgelig core
+  #slingshot cores usually have mist_modules defined as submodules 
+  rm -r sys/
   ```
   
   NOTE: Most up to date templates are at DeMiSTify/templates main folder. It's worth keeping up to date with config.h (and demistify_config_pkg if your board toplevels are in VHDL) but don't worry too much about the other files (most of those changes are about tidiness rather than functionality).
@@ -61,7 +64,7 @@ Modify / create the following files and folders:
 
 * Makefile: Edit Makefile and change the name of the PROJECT. The rest should be fine.
 
-* project.qip: Edit and fill it in with the original Mist project files found in .qsf file
+* mistcore.qip: Edit and fill it in with the original Mist project files found in .qsf file
 
   * Respect the following format [file join $::quartus(qip_path) xxxxxxx] for all the project files:
 
@@ -77,7 +80,7 @@ Modify / create the following files and folders:
 
 * project_files.rtl is a bit like a .qip file but not quartus-specific. 
 
-  * remove included .qip files in template for your own ones (usually just a project.qip file in the root folder)
+  * remove included .qip files in template for your own ones (usually just a mistcore.qip file in the root folder)
   * If pre-flow scripts like build_id.tcl is not used in core remove it
 
     * AMR: It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time. Most of them generate a version string which is included in the config string.  
