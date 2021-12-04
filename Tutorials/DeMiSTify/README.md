@@ -87,9 +87,12 @@ Modify / create the following files and folders:
 
   * comment out 'set optimizeforspeed 1'  to avoid  OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE" which takes long time to generate output bitstream.
 
-* demistify_config_pkg.vhd  file usually does not need to be modified. This file is included in project_files.rtl 
+* demistify_config_pkg.vhd  file usually does not need to be modified, except component guest_mist. This file is included in project_files.rtl 
 
-  * It contains COMPONENT guest_mist.  AMR: The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync.
+  * It contains Component guest_mist.  AMR: The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync.
+  * Just wrap it in 'ifdef DEMISTIFY and ignore it in the board-specific toplevels of boards which don't need it.  It'll be optimised away then.
+    You've just found the reason I moved to using a blanket DEMISTIFY define instead of feature-specific defines. 🙂
+    If you wrap all the optional features in 'ifdef DEMISTIFY rather than more fine-grained defines (DEMISTIFY_HDMI, DEMISTIFY_PARALLEL_AUDIO), and make sure that any inputs have default values in the demistify_config_pkg component declaration, then you can just ignore them in the board-specific toplevels for boards that don't use them.
 
 * firmware
 
@@ -146,31 +149,13 @@ Modify and/or create the following files:
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * Edit it and change the guest module name.
-  
   * If the audio's super-loud and scratchy then you probably have a problem with signed vs unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit.
-  
   * AMR: deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!).
-  
-  * If you need to extract 16 bit audio from the MiST core to feed an I2S transmitter it's a good idea to make use of this Verilog macro defined in DeMiSTify/Boards/deca/board_support.tcl
-  
-    ```tcl
-    set_global_assignment -name VERILOG_MACRO  "DEMISTIFY_PARALLEL_AUDIO=1"
-    ```
-  
-    Definitions in top mist core. The idea is to add the extra signals without breaking the core on MiST:
-  
-    ```tcl
-    `ifdef DEMISTIFY_PARALLEL_AUDIO
-    `else
-    `endif
-    ```
-  
-    AMR: Remember that on MiST that top file is the actual toplevel, so its signals are all physical pins on the FPGA.  If they're not defined, Quartus will attempt to allocate unused pins to them, and fail because there aren't 32 spare pins.
-  
-  * Generic map for substitute_mcu entity: SPI_FASTBIT 
-  
-    AMR: If the control module is driving SPI too fast for the guest core it will cause problems.  (e.g. the NES core uses a sysclk of just 21MHz for the data-IO module.)  In the generic map for substitute_mcu in your deca_top, add this:   `SPI_FASTBIT=>3,`  
-    It defaults to 2, so changing it to 3 halves the speed of the fast-mode SPI comms.
+  * Entity substitute_mcu
+    * AMR: If the control module is driving SPI too fast for the guest core it will cause problems.  (e.g. the NES core uses a sysclk of just 21MHz for the data-IO module.)  In the generic map for substitute_mcu in your deca_top, add this:   `SPI_FASTBIT=>3,`  
+      It defaults to 2, so changing it to 3 halves the speed of the fast-mode SPI comms.
+    * `SPI_INTERNALBIT=>2,`       --needed to avoid hungs on the OSD toguether with SPI_FASTBIT 
+    * sysclk_frequency  It only affects the UART baud rate, so you can ignore it if you're not capturing debug messages.  (Having said that, I generally have a board-specific toplevel PLL to create a 50MHz clock for the controller, and use the incoming clock directly if it happens to be 50MHz already.  If it works OK at 12MHz, then fine, there's no reason to change it.)
 
 ### Changes in Mist core
 
@@ -180,6 +165,21 @@ From the original Mist core it may be needed to adapt just a few things:
   * To supply audio samples for I2S sound you would need to get out the DAC inputs from Mist top to the board top. 
   * For HDMI output you will have to output also blank signal/s and vga clock
   * If you change memory controller then you would also need to adapt the Mist top controller instantiation
+  
+* VERILOG_MACRO DESMISTIFY=1  is defined in  the scripts because it makes the VHDL side less painful that using more fine-grained macros.  This way I can supply default values to the ports in the config_pkg file, so leaving them disconnected is harmless.  
+  If you wrap all the optional features in 'ifdef DEMISTIFY rather than more fine-grained defines (DEMISTIFY_HDMI, DEMISTIFY_PARALLEL_AUDIO), and make sure that any inputs have default values in the demistify_config_pkg component declaration, then you can just ignore them in the board-specific toplevels for boards that don't use them.
+  Just wrap it in 'ifdef DEMISTIFY and ignore it in the board-specific toplevels of boards which don't need it.  
+  
+* If you need to extract 16 bit audio from the MiST core to feed an I2S transmitter it's a good idea to make use of 'ifdef DEMISTIFY definitions in top mist core. The idea is to add the extra signals without breaking the core on MiST:
+
+  ```tcl
+  `ifdef DEMISTIFY
+  `else
+  `endif
+  ```
+  
+  AMR: Remember that on MiST that top file is the actual toplevel, so its signals are all physical pins on the FPGA.  If they're not defined, Quartus will attempt to allocate unused pins to them, and fail because there aren't 32 spare pins.
+  
 * Constraints file: copy the MiST constraints file to the root folder and remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/deca/constraints.sdc)
 
   See below "Notes about Constraint files".
@@ -191,6 +191,7 @@ From the original Mist core it may be needed to adapt just a few things:
     * AMR: Provided the source core is well constrained, it's not too bad, because you can use the MiST constraints file as a template.  Again, it's about replacing MiST-specific stuff with generic stuff defined by DeMiSTify. 
   * deca_pins.tcl: PIN names can be whatever's appropriate for the board.  The job of the board-specific toplevel file is to wire up the board signals to the guest core's signals.
   * deca_support.tcl: include specific board HDL files here (hmdi, audio, ...).
+    * It is also a good place to define VERILOG_MACRO specific for that board
   * deca_opts.tcl: include specific board global assignments here.
 * Quartus log: execute `tail -f compile.log` in ther deca folder
 * If you cloned the repo instead of forking it, you can use the github web interface to create your own fork of the MiST repo and then you can edit .git/config in your local clone so that origin points to your fork instead of mist-devel.  Then you can push to you fork.
