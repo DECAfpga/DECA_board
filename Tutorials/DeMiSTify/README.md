@@ -36,14 +36,10 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
 
   ```sh
   #in submodules urls is always best to use the https version
-  git submodule add https://github.com/DECAfpga/DeMiSTify.git
+  git submodule add https://github.com/somhi/DeMiSTify.git
   git submodule update --init 
-  #[recommended checkout to somhic branch for latest Deca/Atlas features]
-  cd DeMiSTify
-  git checkout somhic
-  cd ..
   ```
-
+  
 * Copy in the root folder the content of DeMiSTify/templates/ for the board you are porting to. You would need to check and adapt template content:
 
   ```sh
@@ -201,9 +197,6 @@ Adjustments to board definition can be found inside the DeMiSTify/ Board/xxxxxx 
 ```sh
 #Do a first make (will finish in error) but it will download missing submodules 
 make
-cd DeMiSTify
-#if used before the forked version of Demistify then checkout to somhic branch for latest Deca/Atlas board updates
-git checkout somhic
 #Create file site.mk in DeMiSTify folder 
 cd DeMiSTify
 cp site.template site.mk
@@ -284,6 +277,8 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 * F12 show/hide OSD 
 
 * The reset button resets the controller (so re-initialises the SD card if it's been changed, reloads any autoboot ROM.) The OSD Reset menu item resets the core itself.
+
+* An SD card is required for Demistify to work (it can be empty)
 
   
 
