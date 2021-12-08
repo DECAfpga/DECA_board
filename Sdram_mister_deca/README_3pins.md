@@ -63,11 +63,13 @@ Tested with memtest_deca_3pins_211020.sof:
   * Result: 120 MHz 
   * Notes: 
     * CKE, DQMH/L pins have been connected with long duponts
-* XS 2.2 Mister module 32 MB
+* XS v2.2 Mister module 32 MB (winbond)
   * Start in auto mode and frecuency falls to 160 MHz.
   * many tests made and is always stable at 160 MHz
 
-
+* XS-D v2.5 Mister module 128 MB (alliance)
+  * Start in auto mode and frecuency falls to 120 MHz.
+  * many tests made and is always stable at 120 MHz
 
 ### Modules tested with SDRAMStressTest 
 
@@ -102,15 +104,23 @@ Tested with SDRAMStressTest_deca_1_3pins.sof:
 
 Tested with SDRAMStressTest_deca_0_XS.sof:
 
-* XS 2.2 Mister module 32 MB  (160 MHz memtest)  
+* XS v2.2 Mister module 32 MB  (160 MHz memtest)  
 
   * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
 
-    * 10 min test: p0: 0, p1: 0, p2: **10**, p3: **16**, p4: 0 errors
+    * 10 min test: p0: 0, p1: 0, p2: **10**, p3: **16**, p4: 0 errors  (6/11/21)
+    * 10 min test: p0: 0, p1: 0, p2: **43**, p3: **90**, p4: 0 errors   (8/12/21)
+    
+  
+* XS-D v2.5 Mister module 128 MB  (120 MHz memtest)  
+
+  * Parameters: CL2, riskcontention 0, SDRAM_DQM_SHARED
+
+    * 45 min test: p0: **0**, p1: **0**, p2: **0**, p3: **0**, p4: **0** errors (8/12/21)
 
       
-    
-    
+
+  
 
 ### 3 pins connections 
 
