@@ -177,11 +177,14 @@ Note: slash / separates different tests
   * module A2,  3 pins, 140 MHz memtest = black screen / black screen with glitches
   * module O1, 3 pins,  120 MHz memtest = 
   * module xs 2.2, 160 MHz memtest = lots of glitches and brown/green screen
-
+  * module xs 2.5, 120 MHz memtest = black screen with glitches
+  * 
+  
 * Battletoads (U) 
   * module A2,  3 pins, 140 MHz memtest = some glitches but playable / intro works well in a loop
   * module O1, 3 pins,  120 MHz memtest =  
   * module xs 2.2, 160 MHz memtest = intro repeats in a loop and playable
+  * module xs 2.5, 120 MHz memtest = intro repeats in a loop and playable
 
 
 

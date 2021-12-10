@@ -90,7 +90,9 @@ Modify / create the following files and folders:
 
   * config.h (from DeMiSTify/templates/config.h): edit and change definitions accordingly to your core:
     * set to #undef if your core does not use those options
+    * #define CONFIG_DISKIMG  is needed if you need to load roms from OSD
     * "If you have the menu working on F12, but no joystick emulation, then make sure you have both CONFIG_JOYKEYS and CONFIG_EXTJOYSTICK defined."
+    * If the keyboard is not working well set #define CONFIG_SENDKEYS
     * There's a define in firmware/config.h which chooses whether or not a ROM is required (#undef ROM_REQUIRED)
     * If you edit config.h  you'll need to do a `make firmware_clean`
     
