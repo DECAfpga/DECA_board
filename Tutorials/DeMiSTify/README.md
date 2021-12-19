@@ -211,7 +211,7 @@ cd ..
 make BOARD=deca
 #When asked just accept default settings with Enter key
 #You could also define more than one board if you want
-make BOARDS=deca\ atlas_cyc
+make BOARD=deca\ atlas_cyc
 ```
 
 * `make` will do `make init`, followed by `make compile` for all boards defined in the makefile.
