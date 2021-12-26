@@ -18,6 +18,8 @@ The folders contain the following information:
 
 * **Cores**: Sample cores 
 
+* **Templates**: Design templates for Quartus projects
+
   
 
 ## **Useful resources:**
