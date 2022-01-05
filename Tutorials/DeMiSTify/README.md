@@ -92,8 +92,10 @@ Modify / create the following files and folders:
     * set to #undef if your core does not use those options
     * #define CONFIG_DISKIMG  is needed if you need to load roms from OSD
     * "If you have the menu working on F12, but no joystick emulation, then make sure you have both CONFIG_JOYKEYS and CONFIG_EXTJOYSTICK defined."
+    * "CONFIG_JOYKEYS_TOGGLE simply maps the numlock key to turn joykeys on or off - which is useful for cores like VIC20 which need the keyboard, so can't have joykeys enabled all the time".
     * If the keyboard is not working well set #define CONFIG_SENDKEYS
     * There's a define in firmware/config.h which chooses whether or not a ROM is required (#undef ROM_REQUIRED)
+    * #define CONFIG_SETTINGS, #define CONFIG_SETTINGS_FILENAME "...": external configuration file.  "The VIC20.CFG file is very simple so far - it only stores the config word and the status of the scandoubler.  Just start with a blank 512 byte (single sector) file.  There are functions in DeMiSTify/firmware/settings.c which can be overriden in overrides.c to customise the file format to suit a particular core.  It may change yet, though - it's still experimental."
     * If you edit config.h  you'll need to do a `make firmware_clean`
     
   * overrides.c: edit and set any override option you want
