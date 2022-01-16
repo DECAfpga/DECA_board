@@ -194,6 +194,8 @@ Adjustments to board definition can be found inside the DeMiSTify/ Board/xxxxxx 
 
 * Quartus log: execute `tail -f compile.log` in ther deca folder
 
+* Update Demistify version: "To "bump" DeMiSTify, just enter the DeMiSTify subdirectory and do a `git pull origin main` . You now have the latest DeMiSTify - but haven't linked it to the parent repo yet.  So to do that, return to the parent directory, then do `git add DeMiSTify`. DeMiSTify will now be bumped as part of your next commit. It might also just be needed to cd into DeMiSTify/EightThirtyTwo/lib832 and do a make to rebuild the libs."
+
   
 
 ### Compile the project
