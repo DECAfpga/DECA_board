@@ -282,6 +282,8 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 * F12 show/hide OSD 
 
+* Long F12 toggles VGA/RGB mode
+
 * The reset button resets the controller (so re-initialises the SD card if it's been changed, reloads any autoboot ROM.) The OSD Reset menu item resets the core itself.
 
 * An SD card is required for Demistify to work (it can be empty)
