@@ -25,7 +25,7 @@ Tested with memtest_deca_220409.sof:
 * "O1" dual memory:  Result: 140 MHz 
 * "O3" dual memory (tested by Rhoderik): Result:  MHz 
 * XS v2.2 Mister module 32 MB (winbond): Result: 160 MHz 
-* XS-D v2.5 Mister module 128 MB (alliance): Result  MHz
+* XS-D v2.5 Mister module 128 MB (alliance): Result  120 MHz   (14' stop test)
 
 
 

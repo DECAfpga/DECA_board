@@ -16,7 +16,7 @@ The folders contain the following information:
 
 * **FuseSoC**: Tutorial on FuseSoC with Deca board
 
-* **Cores**: Sample cores 
+* **Cores**: moved to https://github.com/DECAfpga/Other_Cores
 
 * **Templates**: Design templates for Quartus projects
 
