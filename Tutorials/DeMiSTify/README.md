@@ -4,7 +4,7 @@
 
 What follows is a guide on how I use Demistify. You should adapt it to your own enviroment, board and core. Where you see "deca" substitute it for the board you are porting to. Where you see a specific core (e.g. nes, gameboy) substitute it for the core you are porting.
 
-Note:  Most of the below notes are extracts from chats with Alastair M. Robinson creator of Demistify. Literal extracts are quoted " " in the text below.
+Note:  Most of the below notes are extracts from chats with Alastair M. Robinson, creator of Demistify. Literal extracts are quoted " " in the text below.
 
 ### Fork a Mist core and add DeMiSTify as a submodule
 
@@ -15,7 +15,7 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
   ```sh
   #https 
   git clone https://github.com/DECAfpga/gameboy
-  #or SSH
+  #SSH
   git clone git@github.com:DECAfpga/gameboy
   # go to gameboy folder which will be referred as the root folder
   cd gameboy
@@ -28,15 +28,8 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
   a) Use main DeMiSTify repository from Alastair
 
   ```sh
-  git submodule add https://github.com/robinsonb5/DeMiSTify.git
-  git submodule update --init 
-  ```
-
-  b) Use forked version for latest Deca/Atlas board updates
-
-  ```sh
   #in submodules urls is always best to use the https version
-  git submodule add https://github.com/somhi/DeMiSTify.git
+  git submodule add https://github.com/robinsonb5/DeMiSTify.git
   git submodule update --init 
   ```
   
@@ -53,13 +46,13 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
 
 ### Root project folder
 
-Modify / create the following files and folders:
+Modify or create the following files and folders:
 
 * Makefile: Edit Makefile and change the name of the PROJECT. The rest should be fine.
 
 * project.qip: Edit and fill it in with the original Mist project files found in .qsf file
 
-  * Respect the following format [file join $::quartus(qip_path) xxxxxxx] for all the project files:
+  * Use the following format [file join $::quartus(qip_path) xxxxxxx] for all the project files:
 
     ```verilog
     set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) src/dsp.v]
@@ -74,7 +67,7 @@ Modify / create the following files and folders:
 * project_files.rtl is a bit like a .qip file but not quartus-specific. 
 
   * include your own .qip files (usually just a project.qip file in the root folder)
-  * If pre-flow scripts like build_id.tcl is not used in core remove it
+  * If pre-flow scripts like build_id.tcl is not used in the core then remove it
 
     * "It isn't needed for the some cores.  If it's needed, there'll be a TCL script with the MiST core which generates the build_id.v file, so we just add that script so it gets run at the appropriate time. Most of them generate a version string which is included in the config string."
 
@@ -84,7 +77,7 @@ Modify / create the following files and folders:
 
 * demistify_config_pkg.vhd  file usually does not need to be modified, except component guest_mist declaration. This file is included in project_files.rtl 
 
-  * Component guest_mist:  "The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync.".  See Changes in Mist core section below regarding adding new ports in guest _mist for specific boards without breaking compilation for other boards (VERILOG_MACRO DESMISTIFY=1).
+  * Component guest_mist:  "The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync".  See Changes in Mist core section below regarding adding new ports in guest _mist for specific boards without breaking compilation for other boards (VERILOG_MACRO DESMISTIFY=1).
 
 * firmware folder
 
@@ -98,7 +91,7 @@ Modify / create the following files and folders:
     * #define CONFIG_SETTINGS, #define CONFIG_SETTINGS_FILENAME "...": external configuration file.  "The VIC20.CFG file is very simple so far - it only stores the config word and the status of the scandoubler.  Just start with a blank 512 byte (single sector) file.  There are functions in DeMiSTify/firmware/settings.c which can be overriden in overrides.c to customise the file format to suit a particular core.  It may change yet, though - it's still experimental."
     * If you edit config.h  you'll need to do a `make firmware_clean`
     
-  * overrides.c: edit and set any override option you want
+  * overrides.c : edit and set any override option you want
   
     * Add the following if the core needs to boot a ROM during bootup (this is not needed anymore as the ROM name can be set in config.h, but the override method does still work)
     
@@ -109,7 +102,7 @@ Modify / create the following files and folders:
     const char *bootrom_name="SVI328  ROM";
     ```
     
-    "If the core needs a  BIOS loaded from SD card, the BIOS is loaded as a ROM (with romtype=0) - and then the autobooted ROM, if any, is loaded with romtype 1.  (The romtype is mapped to the ioctl_index variable in the core.)" (see gameboy core as example)
+    "If the core needs a  BIOS loaded from SD card, the BIOS is loaded as a ROM (with romtype=0)  and then the autobooted ROM, if any, is loaded with romtype 1.  (The romtype is mapped to the ioctl_index variable in the core.)" (see gameboy core as example)
     
     * If the core needs to load a VHD drive during bootup checkout the following code ([overrides.c](overrides.c)).
     
@@ -132,7 +125,7 @@ Modify and/or create the following files:
 
 * top.qip: Create a new file named "top.qip" and include board project specific files like deca_top.vhd,  PLLs and specific memory controllers. 
 
-  * Respect the following format [file join $::quartus(qip_path) xxxxxxx] for all the project files:
+  * Use the following format [file join $::quartus(qip_path) xxxxxxx] for all the project files:
 
     ```verilog
     set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sdram.v]
@@ -148,7 +141,7 @@ Modify and/or create the following files:
   * Entity substitute_mcu
     * "If the control module is driving SPI too fast for the guest core it will cause problems (e.g. the NES core uses a sysclk of just 21MHz for the data-IO module).  In the generic map for substitute_mcu in your deca_top, add this:   `SPI_FASTBIT=>3,`   It defaults to 2, so changing it to 3 halves the speed of the fast-mode SPI comms."
     * `SPI_INTERNALBIT=>2,`    might be needed to avoid hungs on the OSD together with SPI_FASTBIT 
-    * "`sysclk_frequency => 500`  It only affects the UART baud rate, so you can ignore it if you're not capturing debug messages.  (Having said that, I generally have a board-specific toplevel PLL to create a 50MHz clock for the controller, and use the incoming clock directly if it happens to be 50MHz already)"
+    * "`sysclk_frequency => 500`  It only affects the UART baud rate, so you can ignore it if you're not capturing debug messages  (having said that, I generally have a board-specific toplevel PLL to create a 50MHz clock for the controller, and use the incoming clock directly if it happens to be 50MHz already)"
 
 ### Mist core
 
@@ -192,9 +185,9 @@ Adjustments to board definition can be found inside the DeMiSTify/ Board/xxxxxx 
 
 ### Others
 
-* Quartus log: execute `tail -f compile.log` in ther deca folder
+* Quartus log: execute `tail -f compile.log` in the board folder
 
-* Update Demistify version: "To "bump" DeMiSTify, just enter the DeMiSTify subdirectory and do a `git pull origin main` . You now have the latest DeMiSTify - but haven't linked it to the parent repo yet.  So to do that, return to the parent directory, then do `git add DeMiSTify`. DeMiSTify will now be bumped as part of your next commit. It might also just be needed to cd into DeMiSTify/EightThirtyTwo/lib832 and do a make to rebuild the libs."
+* Update to latest Demistify version: "To "bump" DeMiSTify, just enter the DeMiSTify subdirectory and do a `git pull origin main` . You now have the latest DeMiSTify - but haven't linked it to the parent repo yet.  So to do that, return to the parent directory, then do `git add DeMiSTify`. DeMiSTify will now be bumped as part of your next commit. It might also just be needed to cd into DeMiSTify/EightThirtyTwo/lib832 and do a make to rebuild the libs."
 
   
 
@@ -203,6 +196,7 @@ Adjustments to board definition can be found inside the DeMiSTify/ Board/xxxxxx 
 ```sh
 #Do a first make (will finish in error) but it will download missing submodules 
 make
+#if you want to first download submodules do > git submodule update --init --recursive
 #Create file site.mk in DeMiSTify folder 
 cd DeMiSTify
 cp site.template site.mk
@@ -210,12 +204,12 @@ cp site.template site.mk
 #(chameleon64 chameleon64v2 de10lite deca neptuno sidi uareloaded mist atlas_cyc...)
 #(e.g. Q18 = /home/jordi/bin/intelFPGA_lite/17.1/quartus/bin)
 gedit site.mk
-#Go back to root folder and do a make with board target (deca, neptuno, uareloaded, atlas_cyc, ...).  If not specified it will compile for all targets. 
+#Go back to the root folder and do a make with board target (deca, neptuno, uareloaded, atlas_cyc, ...).  If not specified it will compile for all targets. 
 cd ..
 make BOARD=deca
 #When asked just accept default settings with Enter key
-#You could also define more than one board if you want
-make BOARD=deca\ atlas_cyc
+#You could also define more than one board if you want:
+# make BOARD=deca\ atlas_cyc
 ```
 
 * `make` will do `make init`, followed by `make compile` for all boards defined in the makefile.
@@ -245,7 +239,7 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
 * If you make changes to firmware and do a make it will not work. You need to do a `make firmware_clean`  or just delete everything in root/firmware folder except for "config.h" and "overrides.c" files.
 
-* If you make changes to demistify board options/pins/... and it does not work compilation, then just delete the board qsf file.
+* If you make changes to demistify board options/pins/... it must be deleted the board qsf file before compilation for the changes to take effect.
 
   
 
@@ -290,9 +284,10 @@ quartus_pgm --mode=jtag -o "p;gameboy_deca.sof"
 
   
 
-### Other material
+### Other useful references
 
 * Porting the VIC20 core https://retroramblings.net/?p=1752
+* Mist-devel [Porting Cores](https://github.com/mist-devel/mist-board/wiki/PortingCores)
 
 
 
