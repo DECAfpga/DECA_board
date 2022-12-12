@@ -157,12 +157,14 @@ From the original Mist core it may be needed to adapt just a few things:
   
   * "If you need to extract 16 bit audio from the MiST core to feed an I2S transmitter it's a good idea to make use of 'ifdef DEMISTIFY definitions in top mist core. The idea is to add the extra signals without breaking the core on MiST":
   
-    ```
+    ```verilog
     `ifdef DEMISTIFY
+    [`elsif] 
     `else
     `endif
+    //`ifndef DEMISTIFY
     ```
-  
+    
     "Remember that on MiST that top file is the actual toplevel, so its signals are all physical pins on the FPGA.  If they're not defined, Quartus will attempt to allocate unused pins to them, and fail because there aren't 32 spare pins."
   
 * Constraints file: copy the MiST constraints file to the root folder and remove the generic Mist board references that are replaced in the boards target specific constraint file (e.g. DeMiSTify/Board/ deca/constraints.sdc). See "Notes about Constraint files" below.
