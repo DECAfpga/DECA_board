@@ -50,6 +50,8 @@ Modify or create the following files and folders:
 
 * Makefile: Edit Makefile and change the name of the PROJECT. The rest should be fine.
 
+  * if needed to increase ROM size, make sure that size is the same in Makefile (e.g. ROMSIZE2=8192) and demistify_config_pkg.vhd (e.g. constant demistify_romsize2 : integer := 13; -- 8k for the second chunk)
+
 * project.qip: Edit and fill it in with the original Mist project files found in .qsf file
 
   * Use the following format [file join $::quartus(qip_path) xxxxxxx] for all the project files:
@@ -77,6 +79,7 @@ Modify or create the following files and folders:
 
 * demistify_config_pkg.vhd  file usually does not need to be modified, except component guest_mist declaration. This file is included in project_files.rtl 
 
+  * ROM size (demistify_romsize*): read above in Makefile
   * Component guest_mist:  "The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync".  See Changes in Mist core section below regarding adding new ports in guest _mist for specific boards without breaking compilation for other boards (VERILOG_MACRO DESMISTIFY=1).
 
 * firmware folder
@@ -92,7 +95,7 @@ Modify or create the following files and folders:
     * If you edit config.h  you'll need to do a `make firmware_clean`
     
   * overrides.c : edit and set any override option you want
-  
+
     * Add the following if the core needs to boot a ROM during bootup (this is not needed anymore as the ROM name can be set in config.h, but the override method does still work)
     
     ```c
@@ -106,7 +109,13 @@ Modify or create the following files and folders:
     
     * If the core needs to load a VHD drive during bootup checkout the following code ([overrides.c](overrides.c)).
     
-      
+  * *.vhd are the output firmware files that are needed to be synthesized in the core.
+
+  * controller.map and controller.bin aren't needed (the mapfile tells you which functions are at which locations in memory, and if debugging is enabled then the .bin file can be uploaded over JTAG to allow updating the firmware without having to recompile the core.)
+
+  * All other files can be safely deleted after make firmware 
+
+    `find ../firmware/ -type f \( ! -iname "config.h" ! -iname "overrides.c" ! -iname "*.vhd" \) -delete`
 
 ### Board folder (deca folder)
 
