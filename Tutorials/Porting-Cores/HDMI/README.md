@@ -115,6 +115,8 @@ Note: When the original core has less than 8 bits per color then you can add zer
 
 * For video, data enable signal (HDMI_TX_DE) might not be present in your core but should be easy to adapt:
   * If you have the blank signal, try  `assign HDMI_TX_DE = ~blank;`  
+  * `assign HDMI_TX_DE = ~(VBlank | HBlank)`
+  * Sometimes might work HDMI_TX_DE = 1'b1, but sometimes it will show out of range info until the DE signal is right. Signaltap can be used to see the right blank/DE signal to be used when H/V signals need to be combined.
   * You could try also the following code  (not tested yet by myself):
 
 ```
