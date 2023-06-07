@@ -2,9 +2,13 @@
 
 [DeMiSTify](https://github.com/robinsonb5/DeMiSTify)  is support code intended to assist in the porting of MiST FPGA cores to other target boards (Copyright (c) 2021 by Alastair M. Robinson).
 
-What follows is a guide on how I use Demistify. You should adapt it to your own enviroment, board and core. Where you see "deca" substitute it for the board you are porting to. Where you see a specific core (e.g. nes, gameboy) substitute it for the core you are porting.
+What follows is a guide on how I use DeMiSTify. You should adapt it to your own enviroment, board and core:
 
-Note:  Most of the below notes are extracts from chats with Alastair M. Robinson, creator of Demistify. Literal extracts are quoted " " in the text below.
+* Where you see "deca" substitute it for the board you are porting to
+
+* Where you see a specific core (e.g. nes, gameboy) substitute it for the core you are porting to
+
+Note:  Most of the below notes are extracts from chats with Alastair M. Robinson, creator of DeMiSTify. Literal extracts are quoted " " in the text below.
 
 ### Fork a Mist core and add DeMiSTify as a submodule
 
@@ -13,10 +17,11 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
 * Clone forked project:
 
   ```sh
-  #https 
-  git clone https://github.com/DECAfpga/gameboy
+  #Choose either SSH or HTTPS
   #SSH
   git clone git@github.com:DECAfpga/gameboy
+  #HTTPS 
+  git clone https://github.com/DECAfpga/gameboy
   # go to gameboy folder which will be referred as the root folder
   cd gameboy
   ```
