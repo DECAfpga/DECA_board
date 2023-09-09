@@ -30,9 +30,9 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
 
 * Add DeMiSTify as a submodule:
 
-  a) Use main DeMiSTify repository from Alastair
-
   ```sh
+  mkdir demistify
+  cd demistify
   #in submodules urls is always best to use the https version
   git submodule add https://github.com/robinsonb5/DeMiSTify.git
   git submodule update --init 
@@ -43,8 +43,12 @@ Note:  Most of the below notes are extracts from chats with Alastair M. Robinson
   ```sh
   #copy board folder template
   cp -r DeMiSTify/templates/deca/ .
+  #remove deca/others folder if not used
+  
   #copy root folder files templates
   cp -r DeMiSTify/templates/deca_atlas_root/* .
+  #remove sys folder if not used
+  rm -r sys
   ```
   
   "Most up to date templates are at DeMiSTify/templates main folder. It's worth keeping up to date with config.h (and demistify_config_pkg if your board toplevels are in VHDL) but don't worry too much about the other files (most of those changes are about tidiness rather than functionality)."
@@ -65,6 +69,8 @@ Modify or create the following files and folders:
     set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) src/dsp.v]
     ```
 
+  * Adapt path location for each file accordingly
+
   * Comment out the pll file, as you will include your board specific pll later into top.qip file at board folder.
 
   * You might need to comment out the original Mist sdram controller file. If you need your own memory controller include it later in top.qip file at deca folder.
@@ -84,8 +90,8 @@ Modify or create the following files and folders:
 
 * demistify_config_pkg.vhd  file usually does not need to be modified, except component guest_mist declaration. This file is included in project_files.rtl 
 
-  * ROM size (demistify_romsize*): read above in Makefile
-  * Component guest_mist:  "The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync".  See Changes in Mist core section below regarding adding new ports in guest _mist for specific boards without breaking compilation for other boards (VERILOG_MACRO DESMISTIFY=1).
+  * ROM size (demistify_romsize*): read above in Makefile section
+  * Component guest_mist:  change guest_mist for the module name of the top MiST file. Adapt ports accordingly. "The idea is that you can share the component between boards, instead of having to declare it for each and every board.  I'm generally porting to TC64v1, TC64v2 and DE10Lite, and I got bored with having to adjust the component three times, and keep them all in sync".  See Changes in Mist core section below regarding adding new ports in guest_mist for specific boards without breaking compilation for other boards (VERILOG_MACRO DESMISTIFY=1).
 
 * firmware folder
 
@@ -132,6 +138,7 @@ Modify and/or create the following files:
 
   * "What I usually do is open the MiST project, and have a look at the PLL, then create a new one for the target board, with the same output frequencies, but the appropriate input frequency. "
   * "the Clock27 input on the MiST core that we're wrapping - it's not 27 MHz, it's whatever clock the board provides.  It'd just be too much of a pain to rename it."
+  * Most FPGAs can share the same PLL if clkin frequency is the same. That pll can be located at e.g. demistify/pll/50 folder
 
 * Memory controllers: add specific memory controllers for your board if needed
 
@@ -147,14 +154,28 @@ Modify and/or create the following files:
 
   * "I normally have a root qip file which has all the project files and the project constraints file.  Then in each board directory I have a top.qip which references the toplevel file for that board, and also any PLLs needed for the project - and if there's anything else needed, like some defines, they can be added too."
 
+* custom_defs.tcl
+
+  * Include here all those set_global_assignment from MiST qsf file that are only core related  (in most cases there's no need to create this file).
+  
 * deca_top.vhd is a wrapper for the original Mist core.  
 
   * "deca_top.vhd will probably be nearly identical to the one for the Mist core - it just has to deal with the name of the Mist core changing from core to core, and other subtleties like whether or not Clock27 is defined with one input or two (annoyingly that varies from core to core!)."
-  * Change the guest module name and adapt ports accordingly (or remove it if already defined in demistify_config_pkg.vhd)
+  
+  * Change the guest module name and adapt ports accordingly
+  
   * "If the audio's super-loud and scratchy then you probably have a problem with signed vs unsigned.  If it's unsigned and your DAC needs signed audio you'll need to invert the most significant bit."
+  
   * Entity substitute_mcu
     * "If the control module is driving SPI too fast for the guest core it will cause problems (e.g. the NES core uses a sysclk of just 21MHz for the data-IO module).  In the generic map for substitute_mcu in your deca_top, add this:   `SPI_FASTBIT=>3,`   It defaults to 2, so changing it to 3 halves the speed of the fast-mode SPI comms."
     * `SPI_INTERNALBIT=>2,`    might be needed to avoid hungs on the OSD together with SPI_FASTBIT 
+    
+    * NeoGeo core with big roms
+    
+      SPI_FASTBIT => 0,       -- Reducing this will make SPI comms faster, for cores which are clocked fast enough.
+    
+      SPI_INTERNALBIT => 0,   -- This will make SPI comms faster, for cores which are clocked fast enough.
+    
     * "`sysclk_frequency => 500`  It only affects the UART baud rate, so you can ignore it if you're not capturing debug messages  (having said that, I generally have a board-specific toplevel PLL to create a 50MHz clock for the controller, and use the incoming clock directly if it happens to be 50MHz already)"
 
 ### Mist core
@@ -210,9 +231,8 @@ Adjustments to board definition can be found inside the DeMiSTify/ Board/xxxxxx 
 ### Compile the project
 
 ```sh
-#Do a first make (will finish in error) but it will download missing submodules 
-make
-#if you want to first download submodules do > git submodule update --init --recursive
+#download missing submodules 
+git submodule update --init --recursive
 #Create file site.mk in DeMiSTify folder 
 cd DeMiSTify
 cp site.template site.mk
